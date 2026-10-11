@@ -37,3 +37,25 @@ Open [index.html](index.html) in any modern web browser:
 2. **Connect Steam**: Enter your **SteamID64** and **Steam Web API Key** on the onboarding screen (or via the **Steam Settings** button).
 3. **Sync Achievements**: Click **Fetch Achievement JSON Data** to retrieve your unlocked and locked achievements.
 4. **Offline Demo**: Click **Load demo data** to try the app immediately without entering credentials.
+
+## 📋 Roadmap & TODO
+
+### ✅ Implemented Features
+- [x] Complete database of all 641 achievements with official Steam icons and descriptions
+- [x] Bilingual unlock guides (English & French) with instant language toggle (`FR` / `EN`)
+- [x] Steam Web API synchronization with resilient CORS proxy relays
+- [x] Fallback manual JSON import for private networks or CORS restrictions
+- [x] Live search across achievement names, descriptions, and unlock guides (EN & FR)
+- [x] Filter tabs for All, Locked, and Unlocked achievements
+- [x] Automatic section splitting (Locked vs Unlocked) in default view
+- [x] Local browser storage caching (`localStorage`) to preserve progress between visits
+- [x] JSON export and import capabilities
+- [x] Offline demo dataset for quick testing without credentials
+- [x] Modular architecture (`i18n.js`, `storage.js`, `steam-api.js`, `app.js`, `isaac_schema.js`)
+- [x] Clean codebase with zero redundancy and English comments
+
+### ⏳ Upcoming Features / Backlog
+- [ ] **Compact Cards Layout**: Refine and compact achievement cards to reduce vertical footprint and screen space usage.
+- [ ] **Dedicated Data Folder**: Move JSON datasets and schemas out of the `js/` directory into a dedicated `data/` directory.
+- [ ] **Character & DLC Tagging**: Filter achievements by specific characters (e.g. The Lost, Lilith, Tainted) or game versions (Rebirth, Afterbirth, Repentance).
+- [ ] **Global Completion Stats**: Fetch and display global player unlock percentages from Steam Community data.

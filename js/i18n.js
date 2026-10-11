@@ -58,10 +58,6 @@ const TRANSLATIONS = {
     secretAchievement: "Succès secret.",
     playerPercent: (p) => `${p}% des joueurs ont ce succès`,
     toUnlock: "À débloquer",
-    guideBtn: "Guide",
-    viewGuideBtn: "Voir le guide",
-    guideTitleLocked: "Afficher ou masquer le guide de déblocage",
-    guideTitleUnlocked: "Consulter la méthode de déblocage",
     guideHeadingLocked: "Comment débloquer",
     guideHeadingUnlocked: "Méthode de déblocage",
     
@@ -138,10 +134,6 @@ const TRANSLATIONS = {
     secretAchievement: "Secret achievement.",
     playerPercent: (p) => `${p}% of players unlocked this`,
     toUnlock: "To unlock",
-    guideBtn: "Guide",
-    viewGuideBtn: "View guide",
-    guideTitleLocked: "Show or hide unlock guide",
-    guideTitleUnlocked: "View unlock guide",
     guideHeadingLocked: "How to unlock",
     guideHeadingUnlocked: "Unlock method",
     

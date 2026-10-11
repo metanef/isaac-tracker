@@ -223,19 +223,16 @@ function createCardElement(item) {
         </div>
       </div>
 
-      <!-- Right: Date and Action Button -->
-      <div class="flex items-center gap-2.5 flex-shrink-0">
+      <!-- Right: Date and Expand Indicator -->
+      <div class="flex items-center gap-2 flex-shrink-0">
         <span class="text-xs text-[#8f98a0] font-normal tracking-tight hidden sm:inline">
           ${dateText || t('toUnlock')}
         </span>
 
         ${hasGuide ? `
-        <button type="button" class="text-xs px-2.5 py-1 rounded bg-[#202936] group-hover:bg-[#2c394b] text-[#66c0f4] border border-[#2d3a4d] transition flex items-center gap-1.5 shadow-sm pointer-events-none" title="${isLocked ? t('guideTitleLocked') : t('guideTitleUnlocked')}">
-          <svg class="w-3.5 h-3.5 text-[#66c0f4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          <span>${isLocked ? t('guideBtn') : t('viewGuideBtn')}</span>
-        </button>
+        <svg id="chevron-${item.id}" class="w-4 h-4 text-[#556375] group-hover:text-[#66c0f4] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
         ` : ''}
       </div>
     </div>
@@ -336,10 +333,14 @@ function renderAchievements() {
 window.toggleNoteEditor = function(id) {
   const section = document.getElementById(`note-section-${id}`);
   const card = document.getElementById(`card-${id}`);
+  const chevron = document.getElementById(`chevron-${id}`);
   if (section) {
     const isNowHidden = section.classList.toggle('hidden');
     if (card) {
       card.setAttribute('aria-expanded', isNowHidden ? 'false' : 'true');
+    }
+    if (chevron) {
+      chevron.classList.toggle('rotate-180', !isNowHidden);
     }
   }
 };

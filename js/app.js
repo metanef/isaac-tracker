@@ -325,16 +325,24 @@ function enrichAchievementsMetadata(list) {
       if (!item.description || item.description === 'Succès verrouillé' || item.description === 'Succès secret') {
         if (meta.description) item.description = meta.description;
       }
-      // Si la note est vide ou générique, assigner la condition de déblocage (explication)
+      // Si la note FR est vide ou générique, assigner la condition de déblocage (explication FR)
       if (!item.note || item.note.trim() === '' || item.note === 'Succès secret.' || item.note === 'Succès verrouillé') {
         if (meta.explication) item.note = meta.explication;
+      }
+      // Si la note EN est vide ou générique, assigner la condition de déblocage (explication EN)
+      if (!item.note_en || item.note_en.trim() === '' || item.note_en === 'Secret achievement.' || item.note_en === 'Locked achievement.') {
+        if (meta.explication_en) item.note_en = meta.explication_en;
       }
     }
 
     // 2. Guide de secours supplémentaire si note toujours vide
     if (!item.note || item.note.trim() === '') {
-      const guide = typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name) : '';
+      const guide = typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name, 'fr') : '';
       if (guide) item.note = guide;
+    }
+    if (!item.note_en || item.note_en.trim() === '') {
+      const guideEn = typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name, 'en') : '';
+      if (guideEn) item.note_en = guideEn;
     }
   });
 }
@@ -416,7 +424,13 @@ function createCardElement(item) {
     ? (item.icongray || item.icon || 'https://placehold.co/64x64/232b35/8f98a0?text=?')
     : (item.icon || 'https://placehold.co/64x64/2a475e/ffffff?text=OK');
 
-  const guideText = item.note || (typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name) : '');
+  const meta = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[item.id]) 
+    ? ISAAC_OFFICIAL_SCHEMA[item.id] 
+    : null;
+
+  const guideText = currentLang === 'en'
+    ? (item.note_en || (meta && meta.explication_en) || (typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name, 'en') : '') || item.note || '')
+    : (item.note || (meta && meta.explication) || (typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name, 'fr') : '') || '');
   const hasGuide = Boolean(guideText && guideText.trim());
 
   // Condition de pliage par défaut :
@@ -518,7 +532,15 @@ function renderAchievements() {
     const nameMatch = (item.name || '').toLowerCase().includes(q);
     const descMatch = (item.description || '').toLowerCase().includes(q);
     const noteMatch = (item.note || '').toLowerCase().includes(q);
-    return nameMatch || descMatch || noteMatch;
+    const noteEnMatch = (item.note_en || '').toLowerCase().includes(q);
+    const meta = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[item.id]) 
+      ? ISAAC_OFFICIAL_SCHEMA[item.id] 
+      : null;
+    const metaMatch = meta ? (
+      (meta.explication && meta.explication.toLowerCase().includes(q)) ||
+      (meta.explication_en && meta.explication_en.toLowerCase().includes(q))
+    ) : false;
+    return nameMatch || descMatch || noteMatch || noteEnMatch || metaMatch;
   });
 
   if (filtered.length === 0) {
@@ -654,8 +676,10 @@ async function syncSteamData() {
  */
 function applyPlayerAchievementsData(playerAchievements, schemaMap = new Map()) {
   const existingNotesMap = new Map();
+  const existingNotesEnMap = new Map();
   achievements.forEach(a => {
     if (a.note) existingNotesMap.set(a.id, a.note);
+    if (a.note_en) existingNotesEnMap.set(a.id, a.note_en);
   });
 
   achievements = playerAchievements.map(pa => {
@@ -683,13 +707,22 @@ function applyPlayerAchievementsData(playerAchievements, schemaMap = new Map()) 
       || (localInfo && localInfo.icon)
       || icon;
 
-    // Déterminer la note/guide : 1. Note existante utilisateur, 2. Explication du schéma, 3. Base locale de guide, 4. Vide
+    // Déterminer la note FR : 1. Note existante, 2. Explication du schéma, 3. Base locale de guide
     let note = existingNotesMap.get(pa.apiname) || '';
     if (!note && localInfo && localInfo.explication) {
       note = localInfo.explication;
     }
     if (!note && typeof getAchievementGuide === 'function') {
-      note = getAchievementGuide(pa.apiname, name);
+      note = getAchievementGuide(pa.apiname, name, 'fr');
+    }
+
+    // Déterminer la note EN : 1. Note EN existante, 2. Explication EN du schéma, 3. Base locale de guide EN
+    let note_en = existingNotesEnMap.get(pa.apiname) || '';
+    if (!note_en && localInfo && localInfo.explication_en) {
+      note_en = localInfo.explication_en;
+    }
+    if (!note_en && typeof getAchievementGuide === 'function') {
+      note_en = getAchievementGuide(pa.apiname, name, 'en');
     }
 
     return {
@@ -701,7 +734,8 @@ function applyPlayerAchievementsData(playerAchievements, schemaMap = new Map()) 
       globalPercent: null,
       icon: icon,
       icongray: icongray,
-      note: note
+      note: note,
+      note_en: note_en
     };
   });
 

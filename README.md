@@ -92,9 +92,15 @@ Open [index.html](index.html) in any modern web browser, or host with any static
 - [x] **Documentation & Header Refresh**: Standardized README with centered badge header, project logo, and updated architecture guide
 - [x] **Automated GitHub Pages Deployment**: Fully automated CI/CD deployment via GitHub Actions with `.nojekyll` configuration at [metanef.github.io/isaac-tracker](https://metanef.github.io/isaac-tracker/)
 
-### ⏳ Upcoming Features / Backlog
+### ⏳ Roadmap
 
-- [ ] **Autofetch stats**
+- [ ] **Autofetch Stats & Session Recap**: Silent background synchronization on visit when credentials are saved, with an animated toast celebrating achievements unlocked since the last session.
+- [ ] **Completion Marks Matrix (Post-it Grid)**: Dedicated interactive view mapping achievements to the 12 iconic boss completion marks across all 34 characters (regular and tainted).
+- [ ] **Dead God Prestige Milestone Tracker**: Dynamic prestige tier badges (*Golden God*, *Platinum God*, *1 000 000 %*, and *Dead God* 641/641) with a countdown of remaining blocker achievements.
+- [ ] **Advanced Sorting Options**: Sort achievements by unlock date (most recent first), Steam global rarity percentage, alphabetical order (A-Z), and in-game ID.
+- [ ] **D6 Goal Picker (Random Run Objective)**: Interactive animated D6 dice rolling a targeted achievement challenge for the player's next run.
+- [ ] **Prestige Profile Card Generator (Canvas Export)**: One-click exportable Isaac-themed showcase image (PNG) with player avatar, stats, completion percentage, and badge for Discord / Reddit sharing.
+- [ ] **PWA & Offline Service Worker**: Web app manifest and lightweight service worker for an installable desktop/mobile experience with offline caching.
 
 ## 🛡️ Privacy & Security
 

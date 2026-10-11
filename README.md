@@ -61,6 +61,8 @@ Open [index.html](index.html) in any modern web browser:
 - [x] **Custom 404 Error Page**: Isaac-themed "I AM ERROR" 404 page matching the Steam design with bilingual localization and quick navigation
 - [x] Modular architecture (`i18n.js`, `storage.js`, `steam-api.js`, `app.js`, `isaac_schema.js`)
 - [x] Clean codebase with zero redundancy and English comments
+- [x] **Unlock Condition Text Alignment**: Pixel-perfect baseline alignment between "Comment débloquer :" label and unlock guide text
+- [x] **Decoupled Data Architecture**: Application guide logic moved into `js/app.js` with asynchronous JSON schema loader (`data/achievements.json`)
 
 ### ⏳ Upcoming Features / Backlog
 
@@ -68,5 +70,3 @@ Open [index.html](index.html) in any modern web browser:
 - [ ] **Update readme**: Update readme.md file with new markdown template.
 - [ ] **Deploy**: Deploy the application to a github page.
 - [ ] **Autofetch stats**
-- [ ] l'zcriture des conditions de déblocage n'est pas alignée avec "comment débloquer :"
-- [ ] le fait qu'isaac_schema soit pas en json c'est bizarre non?

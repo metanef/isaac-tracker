@@ -11,11 +11,36 @@ let currentCharacterFilter = 'all';
 let searchQuery = '';
 
 /**
+ * Asynchronously loads the official schema from data/achievements.json if not already defined globally.
+ * Seamlessly supports both web server / GitHub Pages deployment and static script embedding.
+ * @returns {Promise<Object>} The official schema dictionary
+ */
+async function loadOfficialSchema() {
+  if (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && Object.keys(ISAAC_OFFICIAL_SCHEMA).length > 0) {
+    return ISAAC_OFFICIAL_SCHEMA;
+  }
+  try {
+    const res = await fetch('data/achievements.json');
+    if (res.ok) {
+      const data = await res.json();
+      window.ISAAC_OFFICIAL_SCHEMA = data;
+      return data;
+    }
+  } catch (err) {
+    console.warn('Could not load data/achievements.json via fetch:', err);
+  }
+  return {};
+}
+
+/**
  * Initializes the application on DOM ready.
  */
-function init() {
+async function init() {
   // Initialize language system (defaults to browser preference or stored choice)
   initLanguage();
+
+  // Load official schema asynchronously if not already in memory
+  await loadOfficialSchema();
 
   // Populate input fields with saved Steam credentials
   const creds = loadSavedCredentials();
@@ -150,6 +175,34 @@ function enrichAchievementsMetadata(list) {
       if (guideEn) item.note_en = guideEn;
     }
   });
+}
+
+/**
+ * Retrieves unlock guide text for an achievement by ID or display name.
+ * @param {string} id - Steam API achievement identifier (e.g., "1", "156")
+ * @param {string} [name] - Achievement display name
+ * @param {string} [lang='fr'] - Target language ('fr' or 'en')
+ * @returns {string} Unlock guide text or empty string
+ */
+function getAchievementGuide(id, name, lang = 'fr') {
+  const schema = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined')
+    ? ISAAC_OFFICIAL_SCHEMA
+    : (typeof window !== 'undefined' ? window.ISAAC_OFFICIAL_SCHEMA : null);
+  if (!schema) return '';
+  let entry = id && schema[id];
+  if (!entry && name) {
+    const trimmed = name.trim().toLowerCase();
+    for (const key in schema) {
+      if (schema[key].name && schema[key].name.toLowerCase() === trimmed) {
+        entry = schema[key];
+        break;
+      }
+    }
+  }
+  if (!entry) return '';
+  return lang === 'en'
+    ? (entry.explication_en || entry.explication || '')
+    : (entry.explication || entry.explication_en || '');
 }
 
 /**
@@ -330,11 +383,11 @@ function createCardElement(item) {
     <!-- Compact Unlock Method Box (collapsed by default for all achievements) -->
     ${hasGuide ? `
     <div id="note-section-${item.id}" class="hidden mt-2 pt-2 border-t border-[#232f3e]/60" onclick="event.stopPropagation()">
-      <div class="guide-box ${isLocked ? '' : 'is-unlocked-card'} px-2.5 py-1.5 rounded flex items-start gap-2">
-        <span class="text-[10px] font-bold ${isLocked ? 'text-[#66c0f4]' : 'text-[#66e099]'} uppercase tracking-wider flex-shrink-0 mt-0.5">
+      <div class="guide-box ${isLocked ? '' : 'is-unlocked-card'} px-2.5 py-1.5 rounded flex items-baseline gap-2">
+        <span class="text-[11px] font-bold ${isLocked ? 'text-[#66c0f4]' : 'text-[#66e099]'} uppercase tracking-wider flex-shrink-0 select-none">
           ${isLocked ? t('guideHeadingLocked') : t('guideHeadingUnlocked')}:
         </span>
-        <p class="text-xs text-[#dbe4ee] leading-relaxed select-text">
+        <p class="text-xs text-[#dbe4ee] leading-relaxed select-text flex-1">
           ${guideText}
         </p>
       </div>

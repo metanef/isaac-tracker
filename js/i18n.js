@@ -90,6 +90,14 @@ const TRANSLATIONS = {
     toastExported: "Fichier JSON exporté.",
     toastFileReadError: "Erreur lors de la lecture du fichier JSON.",
     
+    // 404 Error Page
+    pageNotFoundTitle: "Page introuvable (404) - The Binding of Isaac Tracker",
+    errorRoomTitle: "I AM ERROR",
+    error404Subtitle: "Vous êtes tombé dans une salle d'erreur du sous-sol !",
+    error404Desc: "La page que vous recherchez n'existe pas, a été déplacée ou a été consumée par Mom. Ne pleurez pas comme Isaac, une trappe de secours vous ramène à l'abri.",
+    btnBackHome: "Retourner au Tracker",
+    btnOpenDemo: "Charger la démo",
+    
     // Footer
     footerDisclaimer: "© Valve Corporation. Steam et le logo Steam sont des marques déposées. The Binding of Isaac est une marque déposée par Edmund McMillen & Nicalis, Inc.",
     footerSub: "Application de suivi personnel - Synchronisation API Steam & Guides de déblocage"
@@ -175,6 +183,14 @@ const TRANSLATIONS = {
     toastDemoLoaded: "Demo data loaded.",
     toastExported: "JSON file exported.",
     toastFileReadError: "Error reading the JSON file.",
+    
+    // 404 Error Page
+    pageNotFoundTitle: "Page Not Found (404) - The Binding of Isaac Tracker",
+    errorRoomTitle: "I AM ERROR",
+    error404Subtitle: "You stumbled into an Error Room in the basement!",
+    error404Desc: "The page you are looking for does not exist, was moved, or was consumed by Mom. Don't weep like Isaac, a trapdoor leads back to safety.",
+    btnBackHome: "Return to Tracker",
+    btnOpenDemo: "Try Demo Data",
     
     // Footer
     footerDisclaimer: "© Valve Corporation. Steam and the Steam logo are registered trademarks. The Binding of Isaac is a registered trademark of Edmund McMillen & Nicalis, Inc.",

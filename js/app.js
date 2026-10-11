@@ -30,8 +30,15 @@ function init() {
   // Attach DOM event listeners
   setupEventListeners();
 
-  // Display tracker if data exists; otherwise display onboarding setup
-  if (achievements.length > 0) {
+  // Display tracker if data exists or demo param is requested; otherwise display onboarding setup
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('demo') === 'true') {
+    achievements = (typeof ISAAC_DEMO_DATA !== 'undefined') ? [...ISAAC_DEMO_DATA] : [];
+    enrichAchievementsMetadata(achievements);
+    saveAchievementsToStorage(achievements);
+    showTrackerView();
+    showToast(t('toastDemoLoaded'));
+  } else if (achievements.length > 0) {
     enrichAchievementsMetadata(achievements);
     saveAchievementsToStorage(achievements);
     showTrackerView();

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="pageNotFoundTitle">Page introuvable (404) - The Binding of Isaac Tracker</title>
+  <meta name="description" content="Page introuvable (404) - The Binding of Isaac: Rebirth Steam Achievements Tracker">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Motiva Sans alternative & Segoe UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Motiva+Sans:wght@300;400;500;700&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom Steam styling -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="flex flex-col min-h-screen text-sm select-text bg-[#0d1218] text-[#c7d5e0]">
+
+  <!-- Steam Top Navigation Header -->
+  <header class="steam-gradient-header border-b border-[#253243] sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center space-x-3 group transition">
+        <svg class="w-8 h-8 text-[#66c0f4] group-hover:scale-105 transition-transform" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2a10 10 0 0 0-10 10c0 4.9 3.5 8.9 8.2 9.8l2.6-3.8a3 3 0 0 1-1.3-.3l-3.3 1.3a7.8 7.8 0 0 1-1-1.7l3.7-1.5a3 3 0 0 1 4.1-1.7l3.5-2.6a4.8 4.8 0 0 1 .2-1.3 5 5 0 0 1 5 5 5 5 0 0 1-5 5l-2.6 3.6A10 10 0 1 0 12 2zm6.7 12.3a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+        </svg>
+        <div>
+          <h1 class="text-base font-bold text-[#ebebeb] tracking-wide flex items-center gap-2">
+            The Binding of Isaac: Rebirth
+            <span class="text-xs bg-[#243346] text-[#66c0f4] px-2 py-0.5 rounded font-medium border border-[#35485e]">AppID: 250900</span>
+          </h1>
+          <p class="text-xs text-[#8f98a0]" data-i18n="appSubtitle">Suivi des succès et guide des déblocages</p>
+        </div>
+      </a>
+
+      <!-- Language Switcher (FR / EN) -->
+      <div class="lang-switcher">
+        <button id="langFrBtn" type="button" class="lang-btn active" title="Version française">FR</button>
+        <button id="langEnBtn" type="button" class="lang-btn" title="English version">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main 404 Error Container -->
+  <main class="flex-grow flex items-center justify-center p-4 py-16 relative overflow-hidden">
+    <!-- Ambient Glow Backgrounds -->
+    <div class="absolute w-96 h-96 bg-[#1a4b75]/20 rounded-full blur-3xl pointer-events-none -top-10 -left-10"></div>
+    <div class="absolute w-96 h-96 bg-[#634882]/15 rounded-full blur-3xl pointer-events-none -bottom-10 -right-10"></div>
+
+    <!-- Centered Error Card -->
+    <div class="steam-card w-full max-w-xl p-8 sm:p-12 text-center rounded-lg border border-[#2d3f54] shadow-2xl relative z-10 animate-modal">
+      
+      <!-- Iconic Isaac Error / Trapdoor Illustration -->
+      <div class="relative w-28 h-28 mx-auto mb-6 flex items-center justify-center">
+        <!-- Outer Glowing Pulse Ring -->
+        <div class="absolute inset-0 rounded-full bg-[#66c0f4]/10 border border-[#66c0f4]/30 animate-pulse"></div>
+        
+        <!-- Icon Container -->
+        <div class="w-20 h-20 rounded-full bg-[#111923] border-2 border-[#3b516b] flex items-center justify-center shadow-inner text-[#66c0f4]">
+          <svg class="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Sad crying eye / teardrop Isaac tribute -->
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M9 10h.01"/>
+            <path d="M15 10h.01"/>
+            <path d="M9.5 15.5c.8-.8 1.6-1 2.5-1s1.7.2 2.5 1"/>
+            <!-- Teardrops -->
+            <path d="M9 12v2" stroke="#66c0f4" stroke-width="2"/>
+            <path d="M15 12v2" stroke="#66c0f4" stroke-width="2"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Large Gradient 404 Heading -->
+      <div class="select-none leading-none mb-3">
+        <span class="text-6xl sm:text-7xl font-extrabold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-[#66c0f4] via-[#9ad5ff] to-[#caa6ff]">
+          404
+        </span>
+      </div>
+
+      <!-- Isaac Lore Badge: I AM ERROR -->
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#ff8585]/15 border border-[#ff8585]/35 text-[#ff8585] text-xs font-bold uppercase tracking-widest mb-4 shadow-sm" data-i18n="errorRoomTitle">
+        I AM ERROR
+      </div>
+
+      <!-- Subtitle -->
+      <h2 class="text-lg sm:text-xl font-bold text-[#ebebeb] mb-2 tracking-wide" data-i18n="error404Subtitle">
+        Vous êtes tombé dans une salle d'erreur du sous-sol !
+      </h2>
+
+      <!-- Description -->
+      <p class="text-xs sm:text-sm text-[#8f98a0] max-w-md mx-auto leading-relaxed mb-8" data-i18n="error404Desc">
+        La page que vous recherchez n'existe pas, a été déplacée ou a été consumée par Mom. Ne pleurez pas comme Isaac, une trappe de secours vous ramène à l'abri.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <!-- Return Home Button -->
+        <a id="btnBackHome" href="index.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#1999e3] hover:bg-[#41b5f7] text-white font-bold text-xs py-3 px-6 rounded shadow-lg transition duration-200">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          <span data-i18n="btnBackHome">Retourner au Tracker</span>
+        </a>
+
+        <!-- Try Demo Button -->
+        <a id="btnOpenDemo" href="index.html?demo=true" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#212c3d] hover:bg-[#2b3a4f] text-[#c7d5e0] font-medium text-xs py-3 px-5 rounded border border-[#314259] transition duration-200">
+          <span data-i18n="btnOpenDemo">Charger la démo</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Steam Dark Footer -->
+  <footer class="border-t border-[#232f3d] bg-[#12171f] py-4 text-center text-xs text-[#556375] mt-auto">
+    <p data-i18n="footerDisclaimer">© Valve Corporation. Steam et le logo Steam sont des marques déposées. The Binding of Isaac est une marque déposée par Edmund McMillen & Nicalis, Inc.</p>
+    <p class="mt-1" data-i18n="footerSub">Application de suivi personnel - Synchronisation API Steam & Guides de déblocage</p>
+  </footer>
+
+  <!-- Modular Language Engine -->
+  <script src="js/i18n.js"></script>
+  <script>
+    // Initialize localization on DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+      initLanguage();
+
+      const langFrBtn = document.getElementById('langFrBtn');
+      const langEnBtn = document.getElementById('langEnBtn');
+      if (langFrBtn) langFrBtn.addEventListener('click', () => setLanguage('fr'));
+      if (langEnBtn) langEnBtn.addEventListener('click', () => setLanguage('en'));
+    });
+  </script>
+</body>
+</html>

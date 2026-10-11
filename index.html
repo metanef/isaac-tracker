@@ -182,20 +182,77 @@
         </div>
       </div>
 
-      <!-- Tabs and Live Search Bar -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#253243] mb-5">
-        <div class="flex items-center space-x-6 overflow-x-auto overflow-y-hidden py-1 text-sm">
+      <!-- Tabs, Filters and Live Search Bar -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-[#253243] mb-5">
+        <div class="flex items-center space-x-6 overflow-x-auto overflow-y-hidden py-1 text-sm flex-shrink-0">
           <button data-filter="all" class="tab-btn active font-medium"><span data-i18n="tabAll">Tous</span> (<span id="countAll">0</span>)</button>
           <button data-filter="locked" class="tab-btn font-medium"><span data-i18n="tabLocked">Succès Verrouillés</span> (<span id="countLocked">0</span>)</button>
           <button data-filter="unlocked" class="tab-btn font-medium"><span data-i18n="tabUnlocked">Déverrouillés</span> (<span id="countUnlocked">0</span>)</button>
         </div>
 
-        <!-- Live Search Field -->
-        <div class="relative w-full sm:w-80">
-          <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Rechercher par nom, description ou guide..." class="glass-input w-full pl-9 pr-3 py-1.5 rounded text-xs placeholder-[#677587]">
-          <svg class="w-4 h-4 text-[#677587] absolute left-2.5 top-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-          </svg>
+        <!-- Filter Controls: DLC, Character and Live Search -->
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- DLC Filter Selector -->
+          <select id="dlcFilterSelect" class="glass-input py-1.5 px-2.5 rounded text-xs outline-none focus:border-[#66c0f4] cursor-pointer">
+            <option value="all" data-i18n="dlcAll">Tous les DLCs</option>
+            <option value="rebirth">Rebirth</option>
+            <option value="afterbirth">Afterbirth</option>
+            <option value="afterbirth+">Afterbirth+</option>
+            <option value="repentance">Repentance</option>
+            <option value="repentance+">Repentance+</option>
+          </select>
+
+          <!-- Character Filter Selector -->
+          <select id="characterFilterSelect" class="glass-input py-1.5 px-2.5 rounded text-xs outline-none focus:border-[#66c0f4] cursor-pointer max-w-[160px] sm:max-w-none">
+            <option value="all" data-i18n="charAll">Tous les personnages</option>
+            <option value="none" data-i18n="charNone">Général & Défis</option>
+            <optgroup label="Personnages Réguliers" data-i18n-label="charRegular">
+              <option value="Isaac">Isaac</option>
+              <option value="Magdalene">Magdalene</option>
+              <option value="Cain">Cain</option>
+              <option value="Judas">Judas</option>
+              <option value="???">??? (Blue Baby)</option>
+              <option value="Eve">Eve</option>
+              <option value="Samson">Samson</option>
+              <option value="Azazel">Azazel</option>
+              <option value="Lazarus">Lazarus</option>
+              <option value="Eden">Eden</option>
+              <option value="The Lost">The Lost</option>
+              <option value="Lilith">Lilith</option>
+              <option value="Keeper">Keeper</option>
+              <option value="Apollyon">Apollyon</option>
+              <option value="The Forgotten">The Forgotten</option>
+              <option value="Bethany">Bethany</option>
+              <option value="Jacob & Esau">Jacob & Esau</option>
+            </optgroup>
+            <optgroup label="Personnages Tainted" data-i18n-label="charTainted">
+              <option value="Tainted Isaac">Tainted Isaac</option>
+              <option value="Tainted Magdalene">Tainted Magdalene</option>
+              <option value="Tainted Cain">Tainted Cain</option>
+              <option value="Tainted Judas">Tainted Judas</option>
+              <option value="Tainted ???">Tainted ???</option>
+              <option value="Tainted Eve">Tainted Eve</option>
+              <option value="Tainted Samson">Tainted Samson</option>
+              <option value="Tainted Azazel">Tainted Azazel</option>
+              <option value="Tainted Lazarus">Tainted Lazarus</option>
+              <option value="Tainted Eden">Tainted Eden</option>
+              <option value="Tainted Lost">Tainted Lost</option>
+              <option value="Tainted Lilith">Tainted Lilith</option>
+              <option value="Tainted Keeper">Tainted Keeper</option>
+              <option value="Tainted Apollyon">Tainted Apollyon</option>
+              <option value="Tainted Forgotten">Tainted Forgotten</option>
+              <option value="Tainted Bethany">Tainted Bethany</option>
+              <option value="Tainted Jacob">Tainted Jacob</option>
+            </optgroup>
+          </select>
+
+          <!-- Live Search Field -->
+          <div class="relative w-full sm:w-56">
+            <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Rechercher par nom, description ou guide..." class="glass-input w-full pl-9 pr-3 py-1.5 rounded text-xs placeholder-[#677587]">
+            <svg class="w-4 h-4 text-[#677587] absolute left-2.5 top-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
         </div>
       </div>
 

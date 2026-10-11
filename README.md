@@ -43,6 +43,7 @@ Open [index.html](index.html) in any modern web browser:
 ## 📋 Roadmap & TODO
 
 ### ✅ Implemented Features
+
 - [x] Complete database of all 641 achievements with official Steam icons and descriptions
 - [x] Bilingual unlock guides (English & French) with instant language toggle (`FR` / `EN`)
 - [x] Compact cards layout with reduced vertical footprint and sleek 44px icons
@@ -55,9 +56,16 @@ Open [index.html](index.html) in any modern web browser:
 - [x] Local browser storage caching (`localStorage`) to preserve progress between visits
 - [x] JSON export and import capabilities
 - [x] Offline demo dataset for quick testing without credentials
+- [x] **Character & DLC Tagging**: Filter achievements by specific characters (e.g. The Lost, Lilith, Tainted) or game versions (Rebirth, Afterbirth, Repentance)
 - [x] Modular architecture (`i18n.js`, `storage.js`, `steam-api.js`, `app.js`, `isaac_schema.js`)
 - [x] Clean codebase with zero redundancy and English comments
 
 ### ⏳ Upcoming Features / Backlog
-- [ ] **Character & DLC Tagging**: Filter achievements by specific characters (e.g. The Lost, Lilith, Tainted) or game versions (Rebirth, Afterbirth, Repentance).
+
 - [ ] **Global Completion Stats**: Fetch and display global player unlock percentages from Steam Community data.
+- [ ] **Update readme**: Update readme.md file with new markdown template.
+- [ ] **Deploy**: Deploy the application to a github page.
+- [ ] **Update 404 page**: Update 404 page to match the new design.
+- [ ] Steam settings should be a pop up
+- [ ] **Autofetch stats**
+- [ ] l'zcriture des conditions de déblocage n'est pas alignée avec "comment débloquer :"

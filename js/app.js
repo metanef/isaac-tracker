@@ -6,6 +6,8 @@
 // Global application state
 let achievements = [];
 let currentFilter = 'all';
+let currentDlcFilter = 'all';
+let currentCharacterFilter = 'all';
 let searchQuery = '';
 
 /**
@@ -31,6 +33,7 @@ function init() {
   // Display tracker if data exists; otherwise display onboarding setup
   if (achievements.length > 0) {
     enrichAchievementsMetadata(achievements);
+    saveAchievementsToStorage(achievements);
     showTrackerView();
   } else {
     showOnboardingView();
@@ -86,6 +89,14 @@ function enrichAchievementsMetadata(list) {
       if (!item.description || item.description === 'Succès verrouillé' || item.description === 'Succès secret' || item.description === 'Locked achievement') {
         if (meta.description) item.description = meta.description;
       }
+      // Assign DLC version
+      if (meta.dlc) {
+        item.dlc = meta.dlc;
+      }
+      // Assign Character requirement
+      if (meta.character !== undefined) {
+        item.character = meta.character;
+      }
       // Assign French unlock explanation
       if (!item.note || item.note.trim() === '' || item.note === 'Succès secret.' || item.note === 'Succès verrouillé') {
         if (meta.explication) item.note = meta.explication;
@@ -125,11 +136,53 @@ function showToast(message) {
 }
 
 /**
+ * Formats a raw DLC identifier into a display-friendly label.
+ * @param {string} dlc - DLC identifier
+ * @returns {string} Formatted label
+ */
+function formatDlcLabel(dlc) {
+  if (!dlc) return '';
+  switch (dlc.toLowerCase()) {
+    case 'rebirth': return 'Rebirth';
+    case 'afterbirth': return 'Afterbirth';
+    case 'afterbirth+': return 'Afterbirth+';
+    case 'repentance': return 'Repentance';
+    case 'repentance+': return 'Repentance+';
+    default: return dlc;
+  }
+}
+
+/**
+ * Filters a list of achievements by active DLC and Character filters.
+ * @param {Array} list - Achievements list
+ * @returns {Array} Filtered list
+ */
+function getFilteredByMeta(list) {
+  if (!Array.isArray(list)) return [];
+  return list.filter(item => {
+    if (currentDlcFilter !== 'all') {
+      if ((item.dlc || '').toLowerCase() !== currentDlcFilter.toLowerCase()) {
+        return false;
+      }
+    }
+    if (currentCharacterFilter !== 'all') {
+      if (currentCharacterFilter === 'none') {
+        if (item.character !== null && item.character !== undefined) return false;
+      } else {
+        if (item.character !== currentCharacterFilter) return false;
+      }
+    }
+    return true;
+  });
+}
+
+/**
  * Updates dashboard progress counters and progress bar.
  */
 function updateStats() {
-  const total = achievements.length;
-  const unlocked = achievements.filter(a => a.achieved === 1).length;
+  const scopedList = getFilteredByMeta(achievements);
+  const total = scopedList.length;
+  const unlocked = scopedList.filter(a => a.achieved === 1).length;
   const locked = total - unlocked;
   const percent = total > 0 ? Math.round((unlocked / total) * 100) : 0;
 
@@ -165,6 +218,8 @@ function createCardElement(item) {
 
   const dateText = item.achieved === 1 ? formatSteamDate(item.unlockTime) : '';
   const percentText = item.globalPercent ? t('playerPercent', item.globalPercent) : '';
+  const dlcBadge = item.dlc ? `<span class="badge-dlc">${formatDlcLabel(item.dlc)}</span>` : '';
+  const charBadge = item.character ? `<span class="badge-character">${item.character}</span>` : '';
 
   // Icon resolution with fallback to gray icon or placeholder
   const iconUrl = isLocked
@@ -208,11 +263,13 @@ function createCardElement(item) {
         </div>
 
         <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-2 flex-wrap">
+          <div class="flex items-center gap-1.5 flex-wrap">
             <h3 class="text-sm font-semibold text-[#ebebeb] tracking-wide truncate max-w-[260px] sm:max-w-none">${item.name}</h3>
             ${isLocked
               ? `<span class="badge-locked guide-badge">${t('badgeLocked')}</span>`
               : `<span class="badge-unlocked guide-badge">${t('badgeUnlocked')}</span>`}
+            ${dlcBadge}
+            ${charBadge}
             ${percentText ? `<span class="text-[10px] text-[#626a75] hidden sm:inline">• ${percentText}</span>` : ''}
           </div>
           <p class="text-xs text-[#8f98a0] mt-0.5 leading-snug line-clamp-1 sm:line-clamp-none">${item.description || t('secretAchievement')}</p>
@@ -282,22 +339,43 @@ function renderAchievements() {
       currentFilter === 'unlocked' ? item.achieved === 1 : true;
 
     if (!matchesFilter) return false;
+
+    // DLC version filter
+    if (currentDlcFilter !== 'all') {
+      if ((item.dlc || '').toLowerCase() !== currentDlcFilter.toLowerCase()) {
+        return false;
+      }
+    }
+
+    // Character requirement filter
+    if (currentCharacterFilter !== 'all') {
+      if (currentCharacterFilter === 'none') {
+        if (item.character !== null && item.character !== undefined) return false;
+      } else {
+        if (item.character !== currentCharacterFilter) return false;
+      }
+    }
+
     if (!q) return true;
 
     const nameMatch = (item.name || '').toLowerCase().includes(q);
     const descMatch = (item.description || '').toLowerCase().includes(q);
     const noteMatch = (item.note || '').toLowerCase().includes(q);
     const noteEnMatch = (item.note_en || '').toLowerCase().includes(q);
+    const charMatch = (item.character || '').toLowerCase().includes(q);
+    const dlcMatch = (item.dlc || '').toLowerCase().includes(q);
 
     const meta = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[item.id])
       ? ISAAC_OFFICIAL_SCHEMA[item.id]
       : null;
     const metaMatch = meta ? (
       (meta.explication && meta.explication.toLowerCase().includes(q)) ||
-      (meta.explication_en && meta.explication_en.toLowerCase().includes(q))
+      (meta.explication_en && meta.explication_en.toLowerCase().includes(q)) ||
+      (meta.character && meta.character.toLowerCase().includes(q)) ||
+      (meta.dlc && meta.dlc.toLowerCase().includes(q))
     ) : false;
 
-    return nameMatch || descMatch || noteMatch || noteEnMatch || metaMatch;
+    return nameMatch || descMatch || noteMatch || noteEnMatch || charMatch || dlcMatch || metaMatch;
   });
 
   if (filtered.length === 0) {
@@ -396,6 +474,9 @@ function applyPlayerAchievementsData(playerAchievements) {
       note_en = getAchievementGuide(pa.apiname, name, 'en');
     }
 
+    const dlc = (localInfo && localInfo.dlc) || null;
+    const character = (localInfo && localInfo.character !== undefined) ? localInfo.character : null;
+
     return {
       id: pa.apiname,
       name: name,
@@ -405,6 +486,8 @@ function applyPlayerAchievementsData(playerAchievements) {
       globalPercent: null,
       icon: icon,
       icongray: icongray,
+      dlc: dlc,
+      character: character,
       note: note,
       note_en: note_en
     };
@@ -569,6 +652,26 @@ function setupEventListeners() {
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       searchQuery = e.target.value;
+      renderAchievements();
+    });
+  }
+
+  // DLC version filter
+  const dlcFilterSelect = document.getElementById('dlcFilterSelect');
+  if (dlcFilterSelect) {
+    dlcFilterSelect.addEventListener('change', (e) => {
+      currentDlcFilter = e.target.value;
+      updateStats();
+      renderAchievements();
+    });
+  }
+
+  // Character requirement filter
+  const characterFilterSelect = document.getElementById('characterFilterSelect');
+  if (characterFilterSelect) {
+    characterFilterSelect.addEventListener('change', (e) => {
+      currentCharacterFilter = e.target.value;
+      updateStats();
       renderAchievements();
     });
   }

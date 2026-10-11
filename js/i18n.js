@@ -51,6 +51,11 @@ const TRANSLATIONS = {
     tabLocked: "Succès Verrouillés",
     tabUnlocked: "Déverrouillés",
     searchPlaceholder: "Rechercher par nom, description ou guide...",
+    dlcAll: "Tous les DLCs",
+    charAll: "Tous les personnages",
+    charNone: "Général & Défis",
+    charRegular: "Personnages Réguliers",
+    charTainted: "Personnages Tainted",
     
     // Cards
     badgeLocked: "Verrouillé",
@@ -127,6 +132,11 @@ const TRANSLATIONS = {
     tabLocked: "Locked Achievements",
     tabUnlocked: "Unlocked",
     searchPlaceholder: "Search by name, description or guide...",
+    dlcAll: "All DLCs",
+    charAll: "All Characters",
+    charNone: "General & Challenges",
+    charRegular: "Regular Characters",
+    charTainted: "Tainted Characters",
     
     // Cards
     badgeLocked: "Locked",
@@ -219,6 +229,12 @@ function applyLanguageToDOM() {
     const key = el.getAttribute('data-i18n-title');
     const text = t(key);
     if (text) el.title = text;
+  });
+
+  document.querySelectorAll('[data-i18n-label]').forEach(el => {
+    const key = el.getAttribute('data-i18n-label');
+    const text = t(key);
+    if (text) el.label = text;
   });
 
   const btnFr = document.getElementById('langFrBtn');

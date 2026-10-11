@@ -23,9 +23,7 @@
   <header class="steam-gradient-header border-b border-[#253243] sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center space-x-3">
-        <svg class="w-8 h-8 text-[#66c0f4]" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2a10 10 0 0 0-10 10c0 4.9 3.5 8.9 8.2 9.8l2.6-3.8a3 3 0 0 1-1.3-.3l-3.3 1.3a7.8 7.8 0 0 1-1-1.7l3.7-1.5a3 3 0 0 1 4.1-1.7l3.5-2.6a4.8 4.8 0 0 1 .2-1.3 5 5 0 0 1 5 5 5 5 0 0 1-5 5l-2.6 3.6A10 10 0 1 0 12 2zm6.7 12.3a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-        </svg>
+        <img src="public/logo.svg" alt="Isaac Tracker Logo" class="w-8 h-8 object-contain rounded-lg flex-shrink-0 shadow-sm" />
         <div>
           <h1 class="text-base font-bold text-[#ebebeb] tracking-wide flex items-center gap-2">
             The Binding of Isaac: Rebirth
@@ -70,10 +68,8 @@
 
     <!-- Onboarding / Welcome Initial State Card (shown when no data is loaded yet) -->
     <section id="onboardingSection" class="max-w-2xl mx-auto my-12 steam-card p-8 rounded-lg shadow-2xl border border-[#2d3f54] text-center">
-      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#1b2838] border border-[#35485e] mb-4 shadow-inner">
-        <svg class="w-9 h-9 text-[#66c0f4]" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2a10 10 0 0 0-10 10c0 4.9 3.5 8.9 8.2 9.8l2.6-3.8a3 3 0 0 1-1.3-.3l-3.3 1.3a7.8 7.8 0 0 1-1-1.7l3.7-1.5a3 3 0 0 1 4.1-1.7l3.5-2.6a4.8 4.8 0 0 1 .2-1.3 5 5 0 0 1 5 5 5 5 0 0 1-5 5l-2.6 3.6A10 10 0 1 0 12 2zm6.7 12.3a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-        </svg>
+      <div class="inline-flex items-center justify-center mb-4">
+        <img src="public/logo.svg" alt="Isaac Tracker Logo" class="w-16 h-16 object-contain drop-shadow-xl" />
       </div>
       <h2 class="text-xl sm:text-2xl font-bold text-[#ebebeb] tracking-wide mb-2" data-i18n="welcomeTitle">Bienvenue sur Isaac Tracker</h2>
       <p class="text-xs sm:text-sm text-[#8f98a0] max-w-md mx-auto mb-6" data-i18n="welcomeDesc">Suivez vos 641 succès, consultez les guides de déblocage bilingues et filtrez par personnage ou DLC.</p>

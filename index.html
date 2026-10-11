@@ -173,10 +173,10 @@
 
       <!-- Barre d'onglets et de recherche -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#253243] mb-5">
-        <div class="flex items-center space-x-6 overflow-x-auto pb-1 sm:pb-0 text-sm">
-          <button data-filter="all" class="tab-btn active font-medium py-1">Tous (<span id="countAll">0</span>)</button>
-          <button data-filter="locked" class="tab-btn font-medium py-1">Succès Verrouillés (<span id="countLocked">0</span>)</button>
-          <button data-filter="unlocked" class="tab-btn font-medium py-1">Déverrouillés (<span id="countUnlocked">0</span>)</button>
+        <div class="flex items-center space-x-6 overflow-x-auto overflow-y-hidden py-1 text-sm">
+          <button data-filter="all" class="tab-btn active font-medium">Tous (<span id="countAll">0</span>)</button>
+          <button data-filter="locked" class="tab-btn font-medium">Succès Verrouillés (<span id="countLocked">0</span>)</button>
+          <button data-filter="unlocked" class="tab-btn font-medium">Déverrouillés (<span id="countUnlocked">0</span>)</button>
         </div>
 
         <!-- Champ de recherche en direct -->

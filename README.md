@@ -19,8 +19,8 @@ isaactracker/
 ├── css/
 │   └── style.css          # Custom Steam dark theme styles and layout
 ├── data/
-│   ├── achievements.json  # Raw JSON dataset of all 641 achievements
-│   └── isaac_schema.js    # Data schema, demo dataset, and guide lookup
+│   ├── achievements.json  # Complete pure JSON schema of all 641 achievements
+│   └── demo.json          # Pure JSON demo dataset for instant offline onboarding
 ├── js/
 │   ├── i18n.js            # Internationalization engine (EN/FR translations, date formatting, DOM updates)
 │   ├── storage.js         # LocalStorage management and JSON import/export utilities
@@ -59,10 +59,10 @@ Open [index.html](index.html) in any modern web browser:
 - [x] **Character & DLC Tagging**: Filter achievements by specific characters (e.g. The Lost, Lilith, Tainted) or game versions (Rebirth, Afterbirth, Repentance)
 - [x] **Steam Settings Modal**: Steam settings is now a pop-up dialog with background blur overlay, close button, and Escape key dismissal
 - [x] **Custom 404 Error Page**: Isaac-themed "I AM ERROR" 404 page matching the Steam design with bilingual localization and quick navigation
-- [x] Modular architecture (`i18n.js`, `storage.js`, `steam-api.js`, `app.js`, `isaac_schema.js`)
+- [x] Modular architecture (`i18n.js`, `storage.js`, `steam-api.js`, `app.js`, `achievements.json`, `demo.json`)
 - [x] Clean codebase with zero redundancy and English comments
 - [x] **Unlock Condition Text Alignment**: Pixel-perfect baseline alignment between "Comment débloquer :" label and unlock guide text
-- [x] **Decoupled Data Architecture**: Application guide logic moved into `js/app.js` with asynchronous JSON schema loader (`data/achievements.json`)
+- [x] **100% Pure JSON Data Layer**: Removed `isaac_schema.js`, decoupled guide logic into `js/app.js`, and standardized all datasets as pure JSON (`achievements.json` & `demo.json`)
 
 ### ⏳ Upcoming Features / Backlog
 

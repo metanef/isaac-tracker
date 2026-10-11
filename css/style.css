@@ -1,0 +1,163 @@
+:root {
+  --steam-bg-darkest: #10151c;
+  --steam-bg-body: #171d25;
+  --steam-bg-panel: #1b2838;
+  --steam-card-bg: #1a232f;
+  --steam-card-bg-hover: #222d3d;
+  --steam-card-border: #232f3d;
+  --steam-accent-blue: #66c0f4;
+  --steam-btn-blue: #1999e3;
+  --steam-btn-blue-hover: #41b5f7;
+  --steam-text-white: #ebebeb;
+  --steam-text-muted: #8f98a0;
+  --steam-text-dim: #626a75;
+  --steam-highlight: #c7d5e0;
+  --steam-note-bg: #131a22;
+  --steam-locked-bg: rgba(224, 102, 102, 0.08);
+  --steam-locked-border: rgba(224, 102, 102, 0.25);
+  --steam-guide-bg: rgba(102, 192, 244, 0.06);
+  --steam-guide-border: rgba(102, 192, 244, 0.2);
+}
+
+body {
+  background-color: var(--steam-bg-body);
+  color: var(--steam-text-white);
+  font-family: "Motiva Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Steam Scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #12171f;
+}
+::-webkit-scrollbar-thumb {
+  background: #2b3a4c;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3d5169;
+}
+
+.steam-gradient-header {
+  background: radial-gradient(circle at 50% 0%, rgba(33, 50, 72, 0.95) 0%, rgba(23, 29, 37, 0.98) 100%);
+  backdrop-filter: blur(8px);
+}
+
+.steam-card {
+  background-color: var(--steam-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.steam-card:hover {
+  background-color: var(--steam-card-bg-hover);
+  border-color: rgba(102, 192, 244, 0.25);
+  transform: translateY(-1px);
+}
+
+.steam-card.is-locked {
+  border-left: 3px solid #e06666;
+}
+
+.steam-card.is-unlocked {
+  border-left: 3px solid #66e099;
+}
+
+.steam-bar-fill {
+  background: linear-gradient(90deg, #1999e3 0%, #66c0f4 100%);
+  box-shadow: 0 0 12px rgba(102, 192, 244, 0.5);
+}
+
+.glass-input {
+  background: rgba(15, 20, 27, 0.85);
+  border: 1px solid #2a3a4c;
+  color: #ebebeb;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.glass-input:focus {
+  border-color: #66c0f4;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(102, 192, 244, 0.25);
+}
+
+.tab-btn {
+  position: relative;
+  color: #8f98a0;
+  transition: color 0.2s;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.tab-btn:hover {
+  color: #c7d5e0;
+}
+
+.tab-btn.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #66c0f4;
+  border-radius: 2px;
+}
+
+/* Guide & Solution Box (Style Premium Steam) */
+.guide-box {
+  background: linear-gradient(135deg, rgba(20, 30, 44, 0.95) 0%, rgba(13, 20, 30, 0.98) 100%);
+  border: 1px solid rgba(102, 192, 244, 0.25);
+  border-left: 3px solid #66c0f4;
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.guide-box:hover {
+  border-color: rgba(102, 192, 244, 0.4);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.guide-box.is-unlocked-card {
+  border-left: 3px solid #66e099;
+  background: linear-gradient(135deg, rgba(16, 28, 24, 0.9) 0%, rgba(12, 20, 18, 0.95) 100%);
+  border-color: rgba(102, 224, 153, 0.25);
+}
+
+.guide-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-locked {
+  background: rgba(224, 102, 102, 0.15);
+  color: #ff8585;
+  border: 1px solid rgba(224, 102, 102, 0.3);
+}
+
+.badge-unlocked {
+  background: rgba(102, 224, 153, 0.15);
+  color: #66e099;
+  border: 1px solid rgba(102, 224, 153, 0.3);
+}
+

@@ -155,14 +155,13 @@ function updateStats() {
 
 /**
  * Constructs a compact achievement card DOM element.
+ * Collapsed by default for all achievements, opens on entire card click.
  * @param {Object} item - Achievement data object
  * @returns {HTMLElement} Card DOM element
  */
 function createCardElement(item) {
   const card = document.createElement('div');
   const isLocked = item.achieved === 0;
-  card.className = `steam-card rounded p-2.5 relative group ${isLocked ? 'is-locked' : 'is-unlocked'}`;
-  card.id = `card-${item.id}`;
 
   const dateText = item.achieved === 1 ? formatSteamDate(item.unlockTime) : '';
   const percentText = item.globalPercent ? t('playerPercent', item.globalPercent) : '';
@@ -183,8 +182,22 @@ function createCardElement(item) {
 
   const hasGuide = Boolean(guideText && guideText.trim());
 
-  // Default expansion state: locked cards with guide are expanded by default; unlocked cards collapsed
-  const isAutoExpanded = isLocked && hasGuide;
+  // Configure card attributes and interactive click behavior
+  card.className = `steam-card rounded p-2.5 relative group ${isLocked ? 'is-locked' : 'is-unlocked'} ${hasGuide ? 'cursor-pointer select-none' : ''}`;
+  card.id = `card-${item.id}`;
+
+  if (hasGuide) {
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-expanded', 'false');
+    card.addEventListener('click', () => toggleNoteEditor(item.id));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleNoteEditor(item.id);
+      }
+    });
+  }
 
   card.innerHTML = `
     <div class="flex items-center justify-between gap-3">
@@ -217,7 +230,7 @@ function createCardElement(item) {
         </span>
 
         ${hasGuide ? `
-        <button onclick="toggleNoteEditor('${item.id}')" class="text-xs px-2.5 py-1 rounded bg-[#202936] hover:bg-[#2c394b] text-[#66c0f4] border border-[#2d3a4d] transition flex items-center gap-1.5 shadow-sm" title="${isLocked ? t('guideTitleLocked') : t('guideTitleUnlocked')}">
+        <button type="button" class="text-xs px-2.5 py-1 rounded bg-[#202936] group-hover:bg-[#2c394b] text-[#66c0f4] border border-[#2d3a4d] transition flex items-center gap-1.5 shadow-sm pointer-events-none" title="${isLocked ? t('guideTitleLocked') : t('guideTitleUnlocked')}">
           <svg class="w-3.5 h-3.5 text-[#66c0f4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
@@ -227,14 +240,14 @@ function createCardElement(item) {
       </div>
     </div>
 
-    <!-- Compact Unlock Method Box -->
+    <!-- Compact Unlock Method Box (collapsed by default for all achievements) -->
     ${hasGuide ? `
-    <div id="note-section-${item.id}" class="${isAutoExpanded ? 'block' : 'hidden'} mt-2 pt-2 border-t border-[#232f3e]/60">
+    <div id="note-section-${item.id}" class="hidden mt-2 pt-2 border-t border-[#232f3e]/60" onclick="event.stopPropagation()">
       <div class="guide-box ${isLocked ? '' : 'is-unlocked-card'} px-2.5 py-1.5 rounded flex items-start gap-2">
         <span class="text-[10px] font-bold ${isLocked ? 'text-[#66c0f4]' : 'text-[#66e099]'} uppercase tracking-wider flex-shrink-0 mt-0.5">
           ${isLocked ? t('guideHeadingLocked') : t('guideHeadingUnlocked')}:
         </span>
-        <p class="text-xs text-[#dbe4ee] leading-relaxed">
+        <p class="text-xs text-[#dbe4ee] leading-relaxed select-text">
           ${guideText}
         </p>
       </div>
@@ -322,8 +335,12 @@ function renderAchievements() {
  */
 window.toggleNoteEditor = function(id) {
   const section = document.getElementById(`note-section-${id}`);
+  const card = document.getElementById(`card-${id}`);
   if (section) {
-    section.classList.toggle('hidden');
+    const isNowHidden = section.classList.toggle('hidden');
+    if (card) {
+      card.setAttribute('aria-expanded', isNowHidden ? 'false' : 'true');
+    }
   }
 };
 

@@ -13,12 +13,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Motiva+Sans:wght@300;400;500;700&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- Feuille de styles personnalisée -->
+  <!-- Custom Steam styling -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="flex flex-col min-h-screen text-sm select-text">
 
-  <!-- En-tête Steam -->
+  <!-- Steam Top Navigation Header -->
   <header class="steam-gradient-header border-b border-[#253243] sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center space-x-3">
@@ -35,12 +35,13 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <!-- Sélecteur de langue (FR / EN) -->
+        <!-- Language Switcher (FR / EN) -->
         <div class="lang-switcher mr-1">
           <button id="langFrBtn" type="button" class="lang-btn active" title="Version française">FR</button>
           <button id="langEnBtn" type="button" class="lang-btn" title="English version">EN</button>
         </div>
 
+        <!-- Steam Settings Toggle -->
         <button id="toggleConfigBtn" class="flex items-center gap-1.5 text-xs bg-[#212c3d] hover:bg-[#2b3a4f] text-[#c7d5e0] px-3 py-1.5 rounded border border-[#314259] transition">
           <svg class="w-3.5 h-3.5 text-[#66c0f4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
@@ -48,9 +49,13 @@
           </svg>
           <span data-i18n="steamSettings">Paramètres Steam</span>
         </button>
+
+        <!-- Export JSON -->
         <button id="exportNotesBtn" class="text-xs bg-[#212c3d] hover:bg-[#2b3a4f] text-[#c7d5e0] px-3 py-1.5 rounded border border-[#314259] transition" data-i18n-title="exportTitle" title="Sauvegarder vos données en fichier JSON">
           <span data-i18n="exportJson">Exporter JSON</span>
         </button>
+
+        <!-- Import JSON -->
         <label class="text-xs bg-[#212c3d] hover:bg-[#2b3a4f] text-[#c7d5e0] px-3 py-1.5 rounded border border-[#314259] transition cursor-pointer" data-i18n-title="importTitle" title="Importer un fichier JSON de succès">
           <span data-i18n="importJson">Importer JSON</span>
           <input type="file" id="importFileInput" accept=".json" class="hidden">
@@ -59,10 +64,10 @@
     </div>
   </header>
 
-  <!-- Contenu Principal -->
+  <!-- Main Container -->
   <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6">
 
-    <!-- Section Page d'accueil / Connexion Steam (3 boutons et encarts) -->
+    <!-- Onboarding / Steam Connection Card (3 buttons and input slots) -->
     <section id="onboardingSection" class="max-w-2xl mx-auto my-6 steam-card p-6 sm:p-8 rounded-lg shadow-2xl border border-[#2d3f54]">
       <div class="text-center mb-6">
         <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#1b2838] border border-[#35485e] mb-3 shadow-inner">
@@ -75,7 +80,7 @@
       </div>
 
       <div class="space-y-4">
-        <!-- Ligne 1 : Bouton Récupérer ID + Encart texte à droite où le coller -->
+        <!-- Row 1: Get Steam ID Button + Input field on right -->
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
           <a href="https://steamid.io/" target="_blank" rel="noopener noreferrer" class="sm:w-56 flex-shrink-0 bg-[#212c3d] hover:bg-[#2b3a4f] text-[#66c0f4] hover:text-white border border-[#314259] font-medium text-xs py-2.5 px-3 rounded text-center transition flex items-center justify-center gap-1.5 shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +91,7 @@
           <input type="text" id="steamIdInput" data-i18n-placeholder="placeholderSteamId" placeholder="Collez votre SteamID64 ici (17 chiffres)" class="glass-input flex-1 px-3.5 py-2.5 rounded text-xs outline-none focus:border-[#66c0f4]">
         </div>
 
-        <!-- Ligne 2 : Bouton Récupérer Clé API + Encart texte à droite où la coller -->
+        <!-- Row 2: Get API Key Button + Input field on right -->
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
           <a href="https://steamcommunity.com/dev/apikey" target="_blank" rel="noopener noreferrer" class="sm:w-56 flex-shrink-0 bg-[#212c3d] hover:bg-[#2b3a4f] text-[#66c0f4] hover:text-white border border-[#314259] font-medium text-xs py-2.5 px-3 rounded text-center transition flex items-center justify-center gap-1.5 shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,7 +102,7 @@
           <input type="password" id="steamApiKeyInput" data-i18n-placeholder="placeholderApiKey" placeholder="Collez votre clé API Steam ici" class="glass-input flex-1 px-3.5 py-2.5 rounded text-xs outline-none focus:border-[#66c0f4]">
         </div>
 
-        <!-- Ligne 3 : Bouton qui prend toute la largeur -->
+        <!-- Row 3: Full-width Fetch JSON Button -->
         <div>
           <button id="syncSteamBtn" class="w-full bg-[#1999e3] hover:bg-[#41b5f7] text-white font-bold text-sm py-3 px-4 rounded shadow-lg transition flex items-center justify-center gap-2">
             <span id="syncSpinner" class="hidden animate-spin">&#9696;</span>
@@ -105,10 +110,10 @@
           </button>
         </div>
 
-        <!-- Message d'état -->
+        <!-- Status message -->
         <div id="apiStatusMessage" class="text-xs text-center hidden py-1"></div>
 
-        <!-- Encart de texte sous le bouton pour coller le JSON brut (apparaît après clic si échec CORS) -->
+        <!-- Manual JSON paste box (revealed on CORS block) -->
         <div id="manualPasteContainer" class="hidden mt-4 pt-4 border-t border-[#232f3f] bg-[#121820] p-4 rounded border border-[#26374a]">
           <div class="flex items-start gap-2 mb-2">
             <span class="text-sm">🛡️</span>
@@ -130,7 +135,7 @@
           </div>
         </div>
 
-        <!-- Raccourci Démo -->
+        <!-- Demo Data Shortcut -->
         <div class="pt-2 flex items-center justify-end text-xs text-[#626a75] border-t border-[#222d3c]/50">
           <button id="loadDemoBtn" data-i18n="btnLoadDemo" class="hover:text-[#66c0f4] underline transition">
             Charger les données de démo
@@ -139,9 +144,9 @@
       </div>
     </section>
 
-    <!-- Tableau de Bord du Tracker (affiché une fois les succès chargés) -->
+    <!-- Achievements Tracker Dashboard (shown once data is loaded) -->
     <section id="trackerDashboardSection" class="hidden">
-      <!-- Panneau de Progression -->
+      <!-- Progress Statistics Overview -->
       <div class="steam-card p-5 rounded mb-6 border border-[#2a384c]/60">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div>
@@ -171,13 +176,13 @@
           </div>
         </div>
 
-        <!-- Barre de progression Steam -->
+        <!-- Steam Styled Progress Bar -->
         <div class="w-full bg-[#121820] h-3.5 rounded-full overflow-hidden p-[2px] border border-[#2c3c50]">
           <div id="steamProgressBar" class="steam-bar-fill h-full rounded-full transition-all duration-500" style="width: 0%;"></div>
         </div>
       </div>
 
-      <!-- Barre d'onglets et de recherche -->
+      <!-- Tabs and Live Search Bar -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#253243] mb-5">
         <div class="flex items-center space-x-6 overflow-x-auto overflow-y-hidden py-1 text-sm">
           <button data-filter="all" class="tab-btn active font-medium"><span data-i18n="tabAll">Tous</span> (<span id="countAll">0</span>)</button>
@@ -185,7 +190,7 @@
           <button data-filter="unlocked" class="tab-btn font-medium"><span data-i18n="tabUnlocked">Déverrouillés</span> (<span id="countUnlocked">0</span>)</button>
         </div>
 
-        <!-- Champ de recherche en direct -->
+        <!-- Live Search Field -->
         <div class="relative w-full sm:w-80">
           <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Rechercher par nom, description ou guide..." class="glass-input w-full pl-9 pr-3 py-1.5 rounded text-xs placeholder-[#677587]">
           <svg class="w-4 h-4 text-[#677587] absolute left-2.5 top-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -194,12 +199,10 @@
         </div>
       </div>
 
-      <!-- Liste des cartes de succès -->
-      <div id="achievementsContainer" class="space-y-3">
-        <!-- Les cartes sont générées dynamiquement par app.js -->
-      </div>
+      <!-- Achievements Cards Container -->
+      <div id="achievementsContainer" class="space-y-3"></div>
 
-      <!-- État vide (aucun résultat) -->
+      <!-- Empty State View -->
       <div id="emptyState" class="hidden text-center py-16 bg-[#161d26] rounded border border-[#232f3d]">
         <svg class="w-12 h-12 text-[#46566d] mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -209,7 +212,7 @@
       </div>
     </section>
 
-    <!-- Toast de notification -->
+    <!-- Toast Notification -->
     <div id="toastNotification" class="fixed bottom-6 right-6 z-50 bg-[#1e2a38] border border-[#66c0f4] text-[#ebebeb] px-4 py-2.5 rounded shadow-xl text-xs flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
       <span class="text-[#66c0f4] font-bold">&#10003;</span>
       <span id="toastMsg">Action effectuée</span>
@@ -217,15 +220,17 @@
 
   </main>
 
-  <!-- Pied de page -->
+  <!-- Steam Dark Footer -->
   <footer class="border-t border-[#232f3d] bg-[#12171f] py-4 text-center text-xs text-[#556375] mt-auto">
     <p data-i18n="footerDisclaimer">© Valve Corporation. Steam et le logo Steam sont des marques déposées. The Binding of Isaac est une marque déposée par Edmund McMillen & Nicalis, Inc.</p>
     <p class="mt-1" data-i18n="footerSub">Application de suivi personnel - Synchronisation API Steam & Guides de déblocage</p>
   </footer>
 
-  <!-- Scripts JavaScript modulaires -->
+  <!-- Modular JavaScript Architecture -->
   <script src="js/isaac_schema.js"></script>
-  <script src="js/achievements_guide.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/steam-api.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

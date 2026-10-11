@@ -1,31 +1,39 @@
 # The Binding of Isaac - Steam Achievements Tracker
 
-Web application for tracking and guiding unlock methods for Steam achievements in **The Binding of Isaac: Rebirth / Repentance**.
+Modern, responsive web application for tracking and guiding unlock methods for all 641 Steam achievements in **The Binding of Isaac: Rebirth / Repentance**.
 
 ## 🎮 Features
 
-This application lets you:
+- **Complete Database**: All 641 achievements with official names, descriptions, and Steam icons.
+- **Bilingual Unlock Guides**: Full English and French guides explaining how to unlock each achievement.
+- **Dynamic Localization (i18n)**: Switch seamlessly between English (`EN`) and French (`FR`) in real-time without reloading the page.
+- **Steam Profile Sync**: Direct synchronization with your Steam account using Steam Web API and resilient CORS proxies.
+- **Manual Fallback**: Built-in raw JSON import if Steam Web API blocks direct cross-origin requests.
+- **Search & Filter**: Instant live search across names, descriptions, and guides (in both English and French), plus status tabs (All, Locked, Unlocked).
+- **Persistent Storage**: Automatic progress caching in browser `localStorage`, plus manual JSON export and import.
 
-- Browse all 641 achievements for The Binding of Isaac.
-- Synchronize your unlocked and locked achievements directly from your Steam profile.
-- View detailed unlock methods and solutions for every achievement.
-- Filter by status (All, Locked, Unlocked) with instant live search.
-- Automatically save your progress in the browser (`localStorage`) or export/import your data in JSON format.
-- Switch seamlessly between English and French at any time.
+## 📁 Modular Architecture
 
-## 📁 Project Architecture
-
-- `index.html` (or `isaac_steam_achievements_tracker.html`): Main HTML structure with built-in language switcher (defaults to French or browser preference).
-- `index_en.html` (or `isaac_steam_achievements_tracker_en.html`): Direct English entry point (`lang="en"`).
-- `css/style.css`: Custom Steam dark theme CSS with responsive layout and language switcher styles.
-- `js/isaac_schema.js`: Complete official schema of all 641 achievements (official names, descriptions, and Steam icons).
-- `js/achievements_guide.js`: Unlock guides and solutions dataset.
-- `js/app.js`: Application logic (bilingual i18n support, filtering, live search, Steam API synchronization, direct CORS fallback, and LocalStorage management).
+```
+isaactracker/
+├── css/
+│   └── style.css          # Custom Steam dark theme styles and layout
+├── js/
+│   ├── isaac_schema.js    # Comprehensive schema of all 641 achievements, demo dataset, and guide lookup
+│   ├── i18n.js            # Internationalization engine (EN/FR translations, date formatting, DOM updates)
+│   ├── storage.js         # LocalStorage management and JSON import/export utilities
+│   ├── steam-api.js       # Steam Web API client with multi-proxy fallback handling
+│   └── app.js             # Core UI application controller, event handlers, and card rendering
+├── index.html             # Single clean application entry point
+├── README.md              # Project documentation
+└── .gitignore             # Git ignore file (keeps local credentials private)
+```
 
 ## 🚀 Usage
 
-Open [index.html](index.html) or [index_en.html](index_en.html) (or [isaac_steam_achievements_tracker.html](isaac_steam_achievements_tracker.html)) in any modern web browser.
+Open [index.html](index.html) in any modern web browser:
 
-- **Language**: Switch anytime between English (`EN`) and French (`FR`) via the header button (your preference is automatically saved).
-- Enter your **SteamID64** and **Steam Web API Key** on the onboarding page or through the **Steam Settings** button.
-- Click **Fetch Achievement JSON Data** to sync your profile.
+1. **Language**: Toggle anytime between English (`EN`) and French (`FR`) via the header switch (your choice is preserved automatically). You can also open `index.html?lang=en` directly.
+2. **Connect Steam**: Enter your **SteamID64** and **Steam Web API Key** on the onboarding screen (or via the **Steam Settings** button).
+3. **Sync Achievements**: Click **Fetch Achievement JSON Data** to retrieve your unlocked and locked achievements.
+4. **Offline Demo**: Click **Load demo data** to try the app immediately without entering credentials.

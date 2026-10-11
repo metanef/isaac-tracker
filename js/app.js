@@ -1,275 +1,34 @@
 /**
- * Application Isaac Steam Achievements Tracker
- * Gestion de l'affichage, du filtrage, de la recherche et de la synchronisation Steam.
- * Support bilingue Français / Anglais (i18n).
+ * The Binding of Isaac - Steam Achievements Tracker
+ * Core application controller: UI management, filtering, search, and data binding.
  */
 
-// Clés de stockage LocalStorage
-const STORAGE_KEY_DATA = 'isaac_achievements_list_v1';
-const STORAGE_KEY_API = 'steam_tracker_apikey';
-const STORAGE_KEY_ID = 'steam_tracker_steamid';
-const STORAGE_KEY_LANG = 'isaac_tracker_lang';
-
-// État global
+// Global application state
 let achievements = [];
 let currentFilter = 'all';
 let searchQuery = '';
-let currentLang = 'fr';
-
-const TRANSLATIONS = {
-  fr: {
-    appTitle: "The Binding of Isaac: Rebirth",
-    appSubtitle: "Suivi des succès et guide des déblocages",
-    metaTitle: "Succès Steam - The Binding of Isaac: Rebirth",
-    steamSettings: "Paramètres Steam",
-    exportJson: "Exporter JSON",
-    exportTitle: "Sauvegarder vos données en fichier JSON",
-    importJson: "Importer JSON",
-    importTitle: "Importer un fichier JSON de succès",
-    
-    // Onboarding
-    onboardingTitle: "Connexion Steam Tracker",
-    onboardingDesc: "Connectez votre compte pour récupérer vos succès et les guides de déblocage.",
-    btnGetSteamId: "Récupérer mon Steam ID",
-    placeholderSteamId: "Collez votre SteamID64 ici (17 chiffres)",
-    btnGetApiKey: "Récupérer ma Clé API",
-    placeholderApiKey: "Collez votre clé API Steam ici",
-    btnFetchData: "Récupérer les données JSON de mes succès",
-    statusEnterBoth: "Veuillez renseigner à la fois votre Steam ID et votre Clé API.",
-    statusAttempting: "Tentative de récupération automatique...",
-    statusFallbackCors: "Onglet Steam ouvert dans le navigateur.<br>Faites <strong>Ctrl+A</strong> puis <strong>Ctrl+C</strong> et collez le JSON brut dans la zone ci-dessous.",
-    
-    // Fallback manuel
-    corsTitle: "Lien Steam ouvert dans un nouvel onglet",
-    corsDesc: "Sur la page Steam : faites <strong>Ctrl+A</strong> puis <strong>Ctrl+C</strong> pour tout copier, puis collez le contenu ci-dessous :",
-    placeholderManualJson: 'Collez tout le texte JSON brut ici (commençant par {"playerstats": ...})',
-    reopenSteamLink: "Rouvrir la page Steam API",
-    btnProcessJson: "Valider et charger mes succès",
-    btnLoadDemo: "Charger les données de démo",
-    
-    // Dashboard Stats
-    progressTitle: "Progression des Succès",
-    completed: "Complété",
-    unlockedLabel: "Déverrouillés :",
-    lockedLabel: "Verrouillés :",
-    statsDetail: (unlocked, total, percent) => `${unlocked} sur ${total} (${percent} %) succès accomplis`,
-    loadingData: "Chargement des données...",
-    
-    // Onglets & Recherche
-    tabAll: "Tous",
-    tabLocked: "Succès Verrouillés",
-    tabUnlocked: "Déverrouillés",
-    searchPlaceholder: "Rechercher par nom, description ou guide...",
-    
-    // Cartes
-    badgeLocked: "Verrouillé",
-    badgeUnlocked: "Débloqué",
-    secretAchievement: "Succès secret.",
-    playerPercent: (p) => `${p} % des joueurs ont ce succès`,
-    toUnlock: "À débloquer",
-    guideBtn: "Guide",
-    viewGuideBtn: "Voir le guide",
-    guideTitleLocked: "Afficher ou masquer la méthode de déblocage",
-    guideTitleUnlocked: "Voir la méthode de déblocage",
-    guideHeadingLocked: "Comment le débloquer",
-    guideHeadingUnlocked: "Méthode de déblocage",
-    
-    // En-têtes de sections
-    sectionLockedHeader: "🎯 Succès Restants à Débloquer",
-    sectionUnlockedHeader: "✅ Succès Débloqués",
-    
-    // État vide
-    emptyTitle: "Aucun succès trouvé",
-    emptyDesc: "Modifiez vos critères de recherche ou réinitialisez le filtre sélectionné.",
-    
-    // Toasts & Dialogs
-    alertMissingCreds: "Veuillez d'abord renseigner votre Clé API et votre SteamID64 ci-dessus.",
-    toastSyncSuccess: (count) => `Synchronisation réussie (${count} succès) !`,
-    toastPasteEmpty: "Veuillez coller le texte JSON avant de valider.",
-    toastImportSuccess: (count) => `${count} succès importés avec succès !`,
-    toastInvalidSchema: "Format invalide : 'playerstats.achievements' introuvable.",
-    toastInvalidJson: "Format JSON invalide. Vérifiez d'avoir copié tout le contenu.",
-    toastDemoLoaded: "Données d'exemple chargées.",
-    toastExported: "Fichier JSON exporté.",
-    toastFileReadError: "Erreur lors de la lecture du fichier JSON.",
-    
-    // Pied de page
-    footerDisclaimer: "© Valve Corporation. Steam et le logo Steam sont des marques déposées. The Binding of Isaac est une marque déposée par Edmund McMillen & Nicalis, Inc.",
-    footerSub: "Application de suivi personnel - Synchronisation API Steam & Guides de déblocage"
-  },
-  en: {
-    appTitle: "The Binding of Isaac: Rebirth",
-    appSubtitle: "Achievements tracker and unlock guide",
-    metaTitle: "Steam Achievements - The Binding of Isaac: Rebirth",
-    steamSettings: "Steam Settings",
-    exportJson: "Export JSON",
-    exportTitle: "Save your data as a JSON file",
-    importJson: "Import JSON",
-    importTitle: "Import achievements JSON file",
-    
-    // Onboarding
-    onboardingTitle: "Steam Tracker Connection",
-    onboardingDesc: "Connect your account to fetch your achievements and unlock guides.",
-    btnGetSteamId: "Find my Steam ID",
-    placeholderSteamId: "Paste your SteamID64 here (17 digits)",
-    btnGetApiKey: "Get my API Key",
-    placeholderApiKey: "Paste your Steam API key here",
-    btnFetchData: "Fetch Achievement JSON Data",
-    statusEnterBoth: "Please enter both your Steam ID and your API Key.",
-    statusAttempting: "Attempting automatic sync...",
-    statusFallbackCors: "Steam tab opened in your browser.<br>Press <strong>Ctrl+A</strong> then <strong>Ctrl+C</strong> and paste raw JSON in the box below.",
-    
-    // Fallback manual paste
-    corsTitle: "Steam link opened in a new tab",
-    corsDesc: "On the Steam page: press <strong>Ctrl+A</strong> then <strong>Ctrl+C</strong> to copy everything, then paste it below:",
-    placeholderManualJson: 'Paste all raw JSON text here (starting with {"playerstats": ...})',
-    reopenSteamLink: "Reopen Steam API page",
-    btnProcessJson: "Validate & Load Achievements",
-    btnLoadDemo: "Load demo data",
-    
-    // Dashboard Stats
-    progressTitle: "Achievements Progress",
-    completed: "Completed",
-    unlockedLabel: "Unlocked:",
-    lockedLabel: "Locked:",
-    statsDetail: (unlocked, total, percent) => `${unlocked} of ${total} (${percent}%) achievements completed`,
-    loadingData: "Loading data...",
-    
-    // Tabs & Search
-    tabAll: "All",
-    tabLocked: "Locked Achievements",
-    tabUnlocked: "Unlocked",
-    searchPlaceholder: "Search by name, description or guide...",
-    
-    // Cards
-    badgeLocked: "Locked",
-    badgeUnlocked: "Unlocked",
-    secretAchievement: "Secret achievement.",
-    playerPercent: (p) => `${p}% of players unlocked this`,
-    toUnlock: "To unlock",
-    guideBtn: "Guide",
-    viewGuideBtn: "View guide",
-    guideTitleLocked: "Show or hide unlock guide",
-    guideTitleUnlocked: "View unlock guide",
-    guideHeadingLocked: "How to unlock",
-    guideHeadingUnlocked: "Unlock method",
-    
-    // Sections
-    sectionLockedHeader: "🎯 Remaining Locked Achievements",
-    sectionUnlockedHeader: "✅ Unlocked Achievements",
-    
-    // Empty state
-    emptyTitle: "No achievements found",
-    emptyDesc: "Change your search criteria or reset the active filter.",
-    
-    // Toasts & Alerts
-    alertMissingCreds: "Please enter your API Key and SteamID64 above first.",
-    toastSyncSuccess: (count) => `Sync successful (${count} achievements)!`,
-    toastPasteEmpty: "Please paste JSON text before validating.",
-    toastImportSuccess: (count) => `Successfully imported ${count} achievements!`,
-    toastInvalidSchema: "Invalid format: 'playerstats.achievements' not found.",
-    toastInvalidJson: "Invalid JSON format. Check that you copied the full content.",
-    toastDemoLoaded: "Demo data loaded.",
-    toastExported: "JSON file exported.",
-    toastFileReadError: "Error reading JSON file.",
-    
-    // Footer
-    footerDisclaimer: "© Valve Corporation. Steam and the Steam logo are registered trademarks. The Binding of Isaac is a registered trademark of Edmund McMillen & Nicalis, Inc.",
-    footerSub: "Personal tracking app - Steam API synchronization & Unlock guides"
-  }
-};
-
-function t(key, ...args) {
-  const dict = TRANSLATIONS[currentLang] || TRANSLATIONS.fr;
-  const val = dict[key];
-  if (typeof val === 'function') {
-    return val(...args);
-  }
-  return val !== undefined ? val : (TRANSLATIONS.fr[key] || key);
-}
-
-function setLanguage(lang) {
-  if (lang !== 'fr' && lang !== 'en') lang = 'fr';
-  currentLang = lang;
-  try {
-    localStorage.setItem(STORAGE_KEY_LANG, lang);
-  } catch (e) {}
-  applyLanguageToDOM();
-  if (achievements.length > 0) {
-    updateStats();
-    renderAchievements();
-  }
-}
-
-function applyLanguageToDOM() {
-  document.documentElement.lang = currentLang;
-  document.title = t('metaTitle');
-
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    const text = t(key);
-    if (text) el.innerHTML = text;
-  });
-
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-    const key = el.getAttribute('data-i18n-placeholder');
-    const text = t(key);
-    if (text) el.placeholder = text;
-  });
-
-  document.querySelectorAll('[data-i18n-title]').forEach(el => {
-    const key = el.getAttribute('data-i18n-title');
-    const text = t(key);
-    if (text) el.title = text;
-  });
-
-  const btnFr = document.getElementById('langFrBtn');
-  const btnEn = document.getElementById('langEnBtn');
-  if (btnFr) btnFr.classList.toggle('active', currentLang === 'fr');
-  if (btnEn) btnEn.classList.toggle('active', currentLang === 'en');
-}
 
 /**
- * Initialisation de l'application
+ * Initializes the application on DOM ready.
  */
 function init() {
-  // Détection de la langue initiale
-  const urlLang = new URLSearchParams(window.location.search).get('lang');
-  const storedLang = localStorage.getItem(STORAGE_KEY_LANG);
-  const docLang = document.documentElement.lang;
+  // Initialize language system (defaults to browser preference or stored choice)
+  initLanguage();
 
-  if (urlLang === 'en' || urlLang === 'fr') {
-    currentLang = urlLang;
-  } else if (storedLang === 'en' || storedLang === 'fr') {
-    currentLang = storedLang;
-  } else if (docLang === 'en') {
-    currentLang = 'en';
-  } else {
-    currentLang = 'fr';
-  }
+  // Populate input fields with saved Steam credentials
+  const creds = loadSavedCredentials();
+  const apiKeyEl = document.getElementById('steamApiKeyInput');
+  const steamIdEl = document.getElementById('steamIdInput');
+  if (apiKeyEl && creds.apiKey) apiKeyEl.value = creds.apiKey;
+  if (steamIdEl && creds.steamId) steamIdEl.value = creds.steamId;
 
-  applyLanguageToDOM();
+  // Load cached achievements from storage
+  achievements = loadSavedAchievements();
 
-  // Chargement des identifiants sauvegardés
-  const savedKey = localStorage.getItem(STORAGE_KEY_API);
-  const savedId = localStorage.getItem(STORAGE_KEY_ID);
-  if (savedKey) document.getElementById('steamApiKeyInput').value = savedKey;
-  if (savedId) document.getElementById('steamIdInput').value = savedId;
-
-  // Chargement des données de succès
-  const stored = localStorage.getItem(STORAGE_KEY_DATA);
-  if (stored) {
-    try {
-      achievements = JSON.parse(stored);
-    } catch (e) {
-      achievements = [];
-    }
-  } else {
-    achievements = [];
-  }
-
+  // Attach DOM event listeners
   setupEventListeners();
 
+  // Display tracker if data exists; otherwise display onboarding setup
   if (achievements.length > 0) {
     enrichAchievementsMetadata(achievements);
     showTrackerView();
@@ -279,7 +38,7 @@ function init() {
 }
 
 /**
- * Afficher l'interface principale du tracker
+ * Displays the main achievements tracker dashboard view.
  */
 function showTrackerView() {
   const onboarding = document.getElementById('onboardingSection');
@@ -290,7 +49,7 @@ function showTrackerView() {
 }
 
 /**
- * Afficher l'écran d'accueil / connexion
+ * Displays the onboarding / connection setup view.
  */
 function showOnboardingView() {
   const onboarding = document.getElementById('onboardingSection');
@@ -300,45 +59,47 @@ function showOnboardingView() {
 }
 
 /**
- * Enrichit les objets succès avec les noms officiels, icônes réelles et guides
+ * Enriches raw achievement objects with official metadata (names, real icons, and bilingual guides).
+ * @param {Array} list - List of achievement objects
  */
 function enrichAchievementsMetadata(list) {
+  if (!Array.isArray(list)) return;
+
   list.forEach(item => {
-    // 1. Récupération des informations du schéma officiel local
-    const meta = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[item.id]) 
-      ? ISAAC_OFFICIAL_SCHEMA[item.id] 
+    const meta = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[item.id])
+      ? ISAAC_OFFICIAL_SCHEMA[item.id]
       : null;
 
     if (meta) {
-      // Si le nom est absent, égal à l'id ou purement numérique
+      // Fix missing, generic, or purely numerical achievement names
       if (!item.name || item.name === item.id || /^\d+$/.test(item.name)) {
         item.name = meta.name;
       }
-      // Si l'icône est un placeholder ou vide
+      // Replace placeholder icons with authentic Steam icons
       if (!item.icon || item.icon.includes('placehold.co') || item.icon === '') {
         item.icon = meta.icon;
       }
       if (!item.icongray || item.icongray.includes('placehold.co') || item.icongray === '') {
         item.icongray = meta.icongray || meta.icon;
       }
-      // Si la description est générique
-      if (!item.description || item.description === 'Succès verrouillé' || item.description === 'Succès secret') {
+      // Replace generic placeholder descriptions
+      if (!item.description || item.description === 'Succès verrouillé' || item.description === 'Succès secret' || item.description === 'Locked achievement') {
         if (meta.description) item.description = meta.description;
       }
-      // Si la note FR est vide ou générique, assigner la condition de déblocage (explication FR)
+      // Assign French unlock explanation
       if (!item.note || item.note.trim() === '' || item.note === 'Succès secret.' || item.note === 'Succès verrouillé') {
         if (meta.explication) item.note = meta.explication;
       }
-      // Si la note EN est vide ou générique, assigner la condition de déblocage (explication EN)
+      // Assign English unlock explanation
       if (!item.note_en || item.note_en.trim() === '' || item.note_en === 'Secret achievement.' || item.note_en === 'Locked achievement.') {
         if (meta.explication_en) item.note_en = meta.explication_en;
       }
     }
 
-    // 2. Guide de secours supplémentaire si note toujours vide
+    // Secondary guide lookup if note is still missing
     if (!item.note || item.note.trim() === '') {
-      const guide = typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name, 'fr') : '';
-      if (guide) item.note = guide;
+      const guideFr = typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name, 'fr') : '';
+      if (guideFr) item.note = guideFr;
     }
     if (!item.note_en || item.note_en.trim() === '') {
       const guideEn = typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name, 'en') : '';
@@ -348,38 +109,14 @@ function enrichAchievementsMetadata(list) {
 }
 
 /**
- * Sauvegarde dans le localStorage du navigateur
- */
-function saveAchievementsToLocal() {
-  localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(achievements));
-}
-
-/**
- * Formatage des dates Steam (timestamp Unix en secondes)
- */
-function formatSteamDate(unixSeconds) {
-  if (!unixSeconds) return '';
-  const date = new Date(unixSeconds * 1000);
-  const day = date.getDate();
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, '0');
-  const mins = String(date.getMinutes()).padStart(2, '0');
-
-  if (currentLang === 'en') {
-    const monthsEn = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return `Unlocked on ${monthsEn[date.getMonth()]} ${day}, ${year} at ${hours}:${mins}`;
-  } else {
-    const monthsFr = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
-    return `Débloqué le ${day} ${monthsFr[date.getMonth()]} ${year}, à ${hours}:${mins}`;
-  }
-}
-
-/**
- * Affichage d'un toast informatif
+ * Displays a toast notification with the given message.
+ * @param {string} message - Notification text
  */
 function showToast(message) {
   const toast = document.getElementById('toastNotification');
   const text = document.getElementById('toastMsg');
+  if (!toast || !text) return;
+
   text.innerText = message;
   toast.classList.remove('translate-y-20', 'opacity-0');
   setTimeout(() => {
@@ -388,7 +125,7 @@ function showToast(message) {
 }
 
 /**
- * Mise à jour des compteurs et statistiques
+ * Updates dashboard progress counters and progress bar.
  */
 function updateStats() {
   const total = achievements.length;
@@ -396,19 +133,30 @@ function updateStats() {
   const locked = total - unlocked;
   const percent = total > 0 ? Math.round((unlocked / total) * 100) : 0;
 
-  document.getElementById('statPercent').innerText = `${percent}%`;
-  document.getElementById('steamProgressBar').style.width = `${percent}%`;
-  document.getElementById('statUnlockedCount').innerText = unlocked;
-  document.getElementById('statLockedCount').innerText = locked;
-  document.getElementById('statsDetailText').innerText = t('statsDetail', unlocked, total, percent);
+  const statPercent = document.getElementById('statPercent');
+  const progressBar = document.getElementById('steamProgressBar');
+  const unlockedCount = document.getElementById('statUnlockedCount');
+  const lockedCount = document.getElementById('statLockedCount');
+  const detailText = document.getElementById('statsDetailText');
 
-  document.getElementById('countAll').innerText = total;
-  document.getElementById('countLocked').innerText = locked;
-  document.getElementById('countUnlocked').innerText = unlocked;
+  if (statPercent) statPercent.innerText = `${percent}%`;
+  if (progressBar) progressBar.style.width = `${percent}%`;
+  if (unlockedCount) unlockedCount.innerText = unlocked;
+  if (lockedCount) lockedCount.innerText = locked;
+  if (detailText) detailText.innerText = t('statsDetail', unlocked, total, percent);
+
+  const countAll = document.getElementById('countAll');
+  const countLocked = document.getElementById('countLocked');
+  const countUnlocked = document.getElementById('countUnlocked');
+  if (countAll) countAll.innerText = total;
+  if (countLocked) countLocked.innerText = locked;
+  if (countUnlocked) countUnlocked.innerText = unlocked;
 }
 
 /**
- * Rendu visuel d'une carte de succès
+ * Constructs an achievement card DOM element.
+ * @param {Object} item - Achievement data object
+ * @returns {HTMLElement} Card DOM element
  */
 function createCardElement(item) {
   const card = document.createElement('div');
@@ -419,40 +167,38 @@ function createCardElement(item) {
   const dateText = item.achieved === 1 ? formatSteamDate(item.unlockTime) : '';
   const percentText = item.globalPercent ? t('playerPercent', item.globalPercent) : '';
 
-  // Icône avec fallback vers l'icône normale ou icongray
-  const iconUrl = isLocked 
+  // Icon resolution with fallback to gray icon or placeholder
+  const iconUrl = isLocked
     ? (item.icongray || item.icon || 'https://placehold.co/64x64/232b35/8f98a0?text=?')
     : (item.icon || 'https://placehold.co/64x64/2a475e/ffffff?text=OK');
 
-  const meta = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[item.id]) 
-    ? ISAAC_OFFICIAL_SCHEMA[item.id] 
+  // Localized guide text resolution
+  const meta = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[item.id])
+    ? ISAAC_OFFICIAL_SCHEMA[item.id]
     : null;
 
   const guideText = currentLang === 'en'
     ? (item.note_en || (meta && meta.explication_en) || (typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name, 'en') : '') || item.note || '')
     : (item.note || (meta && meta.explication) || (typeof getAchievementGuide === 'function' ? getAchievementGuide(item.id, item.name, 'fr') : '') || '');
+
   const hasGuide = Boolean(guideText && guideText.trim());
 
-  // Condition de pliage par défaut :
-  // Déplié uniquement pour les succès verrouillés disposant d'un guide.
-  // Plié par défaut pour TOUS les succès déjà débloqués.
+  // Default expansion state: locked cards with guide are expanded by default; unlocked cards collapsed
   const isAutoExpanded = isLocked && hasGuide;
 
   card.innerHTML = `
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-      <!-- Gauche : Icône et détails du succès -->
+      <!-- Left: Icon and Achievement Details -->
       <div class="flex items-start gap-4 flex-1 min-w-0">
-        <!-- Boîte d'icône Steam -->
         <div class="w-16 h-16 flex-shrink-0 bg-[#0d1218] border border-[#3b4b5e]/40 rounded overflow-hidden flex items-center justify-center shadow-inner">
           <img src="${iconUrl}" alt="${item.name}" class="w-full h-full object-cover select-none" onerror="this.onerror=null;this.src='https://placehold.co/64x64/1d2531/8f98a0?text=?';">
         </div>
 
-        <!-- Titre & Description officielle -->
         <div class="min-w-0 flex-1">
           <div class="flex items-center gap-2 flex-wrap">
             <h3 class="text-base font-semibold text-[#ebebeb] tracking-wide">${item.name}</h3>
-            ${isLocked 
-              ? `<span class="badge-locked guide-badge">${t('badgeLocked')}</span>` 
+            ${isLocked
+              ? `<span class="badge-locked guide-badge">${t('badgeLocked')}</span>`
               : `<span class="badge-unlocked guide-badge">${t('badgeUnlocked')}</span>`}
           </div>
           <p class="text-xs text-[#8f98a0] mt-0.5 leading-relaxed">${item.description || t('secretAchievement')}</p>
@@ -460,12 +206,12 @@ function createCardElement(item) {
         </div>
       </div>
 
-      <!-- Droite : Date et bouton d'action -->
+      <!-- Right: Date and Action Button -->
       <div class="flex flex-row md:flex-col items-end justify-between md:justify-center flex-shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-[#222d3d]">
-        ${dateText 
-          ? `<span class="text-xs text-[#8f98a0] font-normal tracking-tight">${dateText}</span>` 
+        ${dateText
+          ? `<span class="text-xs text-[#8f98a0] font-normal tracking-tight">${dateText}</span>`
           : `<span class="text-xs text-[#8f98a0] font-normal tracking-tight">${t('toUnlock')}</span>`}
-        
+
         ${hasGuide ? `
         <div class="mt-2">
           <button onclick="toggleNoteEditor('${item.id}')" class="text-xs px-2.5 py-1 rounded bg-[#202936] hover:bg-[#2c394b] text-[#66c0f4] border border-[#2d3a4d] transition flex items-center gap-1.5" title="${isLocked ? t('guideTitleLocked') : t('guideTitleUnlocked')}">
@@ -479,7 +225,7 @@ function createCardElement(item) {
       </div>
     </div>
 
-    <!-- Section Guide & Méthode de déblocage (Pliée par défaut pour les succès débloqués) -->
+    <!-- Unlock Method Section -->
     ${hasGuide ? `
     <div id="note-section-${item.id}" class="${isAutoExpanded ? 'block' : 'hidden'} mt-3 pt-3 border-t border-[#232f3e]/80">
       <div class="guide-box ${isLocked ? '' : 'is-unlocked-card'} p-3 rounded">
@@ -488,7 +234,6 @@ function createCardElement(item) {
             ${isLocked ? t('guideHeadingLocked') : t('guideHeadingUnlocked')}
           </span>
         </div>
-        
         <div class="text-xs text-[#dbe4ee] leading-relaxed py-0.5 px-0.5">
           ${guideText}
         </div>
@@ -501,9 +246,9 @@ function createCardElement(item) {
 }
 
 /**
- * En-tête de section (Succès débloqués vs verrouillés)
+ * Renders a group section header (e.g. Locked vs Unlocked achievements).
  */
-function renderSectionHeader(container, title, count, extraClass = "") {
+function renderSectionHeader(container, title, count, extraClass = '') {
   const header = document.createElement('div');
   header.className = `text-xs font-bold text-[#8f98a0] uppercase tracking-wider mb-2 ${extraClass}`;
   header.innerHTML = `<span>${title}</span> <span class="text-[#556375] font-normal">(${count})</span>`;
@@ -511,7 +256,7 @@ function renderSectionHeader(container, title, count, extraClass = "") {
 }
 
 /**
- * Rendu de la liste complète selon filtres et recherche
+ * Renders the filtered and searched achievements list.
  */
 function renderAchievements() {
   const container = document.getElementById('achievementsContainer');
@@ -527,19 +272,21 @@ function renderAchievements() {
       currentFilter === 'unlocked' ? item.achieved === 1 : true;
 
     if (!matchesFilter) return false;
-
     if (!q) return true;
+
     const nameMatch = (item.name || '').toLowerCase().includes(q);
     const descMatch = (item.description || '').toLowerCase().includes(q);
     const noteMatch = (item.note || '').toLowerCase().includes(q);
     const noteEnMatch = (item.note_en || '').toLowerCase().includes(q);
-    const meta = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[item.id]) 
-      ? ISAAC_OFFICIAL_SCHEMA[item.id] 
+
+    const meta = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[item.id])
+      ? ISAAC_OFFICIAL_SCHEMA[item.id]
       : null;
     const metaMatch = meta ? (
       (meta.explication && meta.explication.toLowerCase().includes(q)) ||
       (meta.explication_en && meta.explication_en.toLowerCase().includes(q))
     ) : false;
+
     return nameMatch || descMatch || noteMatch || noteEnMatch || metaMatch;
   });
 
@@ -550,7 +297,7 @@ function renderAchievements() {
     if (emptyState) emptyState.classList.add('hidden');
   }
 
-  // Vue scindée automatique si filtre général sans recherche
+  // Automatic split into Locked and Unlocked sections when "All" tab is active without search query
   const hasSections = (currentFilter === 'all' && !q);
   const unlockedList = filtered.filter(a => a.achieved === 1);
   const lockedList = filtered.filter(a => a.achieved === 0);
@@ -561,7 +308,7 @@ function renderAchievements() {
       lockedList.forEach(item => container.appendChild(createCardElement(item)));
     }
     if (unlockedList.length > 0) {
-      renderSectionHeader(container, t('sectionUnlockedHeader'), unlockedList.length, "mt-8");
+      renderSectionHeader(container, t('sectionUnlockedHeader'), unlockedList.length, 'mt-8');
       unlockedList.forEach(item => container.appendChild(createCardElement(item)));
     }
   } else {
@@ -570,7 +317,8 @@ function renderAchievements() {
 }
 
 /**
- * Ouvrir / Fermer le tiroir d'explication d'un succès
+ * Toggles the visibility of an achievement guide drawer.
+ * @param {string} id - Achievement ID
  */
 window.toggleNoteEditor = function(id) {
   const section = document.getElementById(`note-section-${id}`);
@@ -580,7 +328,7 @@ window.toggleNoteEditor = function(id) {
 };
 
 /**
- * Rafraîchir toute l'interface
+ * Re-renders the entire UI (stats and cards).
  */
 function renderAll() {
   updateStats();
@@ -588,93 +336,10 @@ function renderAll() {
 }
 
 /**
- * Synchronisation avec l'API Steam
+ * Merges raw player achievements with the official schema and saves to storage.
+ * @param {Array} playerAchievements - Achievements returned by Steam API
  */
-async function syncSteamData() {
-  const apiKey = document.getElementById('steamApiKeyInput').value.trim();
-  const steamId = document.getElementById('steamIdInput').value.trim();
-  const statusEl = document.getElementById('apiStatusMessage');
-  const syncBtn = document.getElementById('syncSteamBtn');
-  const spinner = document.getElementById('syncSpinner');
-  const manualContainer = document.getElementById('manualPasteContainer');
-
-  if (!apiKey || !steamId) {
-    statusEl.className = "text-xs text-red-400 block py-1 text-center font-medium";
-    statusEl.innerText = t('statusEnterBoth');
-    return;
-  }
-
-  // Sauvegarde des identifiants
-  localStorage.setItem(STORAGE_KEY_API, apiKey);
-  localStorage.setItem(STORAGE_KEY_ID, steamId);
-
-  statusEl.className = "text-xs text-[#66c0f4] block py-1 text-center";
-  statusEl.innerText = t('statusAttempting');
-  if (syncBtn) syncBtn.disabled = true;
-  if (spinner) spinner.classList.remove('hidden');
-
-  const appId = '250900'; // The Binding of Isaac: Rebirth
-  const directSteamUrl = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid=${appId}&key=${apiKey}&steamid=${steamId}`;
-
-  // Relais proxy pour contourner la politique CORS du navigateur
-  async function proxyFetch(targetUrl) {
-    const proxies = [
-      (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-      (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-      (url) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`
-    ];
-
-    for (const proxyGen of proxies) {
-      const proxiedUrl = proxyGen(targetUrl);
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 6000);
-        const resp = await fetch(proxiedUrl, { signal: controller.signal });
-        clearTimeout(timeoutId);
-
-        if (resp.ok) {
-          const text = await resp.text();
-          try {
-            return JSON.parse(text);
-          } catch (parseErr) {}
-        }
-      } catch (e) {}
-    }
-    throw new Error("Relais CORS indisponibles.");
-  }
-
-  try {
-    const playerData = await proxyFetch(directSteamUrl);
-
-    if (!playerData.playerstats || !playerData.playerstats.achievements) {
-      throw new Error("Profil privé ou clé invalide.");
-    }
-
-    applyPlayerAchievementsData(playerData.playerstats.achievements);
-    showTrackerView();
-    showToast(t('toastSyncSuccess', achievements.length));
-  } catch (err) {
-    // En cas d'échec CORS : ouverture de la page Steam API et apparition de l'encart sous le bouton
-    window.open(directSteamUrl, '_blank');
-
-    if (manualContainer) {
-      manualContainer.classList.remove('hidden');
-      const textarea = document.getElementById('manualJsonInput');
-      if (textarea) textarea.focus();
-    }
-
-    statusEl.className = "text-xs text-amber-300 block py-1 text-center";
-    statusEl.innerHTML = t('statusFallbackCors');
-  } finally {
-    if (syncBtn) syncBtn.disabled = false;
-    if (spinner) spinner.classList.add('hidden');
-  }
-}
-
-/**
- * Traitement et fusion des données joueur avec le schéma complet et les guides
- */
-function applyPlayerAchievementsData(playerAchievements, schemaMap = new Map()) {
+function applyPlayerAchievementsData(playerAchievements) {
   const existingNotesMap = new Map();
   const existingNotesEnMap = new Map();
   achievements.forEach(a => {
@@ -683,31 +348,19 @@ function applyPlayerAchievementsData(playerAchievements, schemaMap = new Map()) 
   });
 
   achievements = playerAchievements.map(pa => {
-    // Schéma local officiel (641 succès avec noms, icônes réelles Steam et descriptions)
-    const localInfo = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[pa.apiname]) 
-      ? ISAAC_OFFICIAL_SCHEMA[pa.apiname] 
+    const localInfo = (typeof ISAAC_OFFICIAL_SCHEMA !== 'undefined' && ISAAC_OFFICIAL_SCHEMA[pa.apiname])
+      ? ISAAC_OFFICIAL_SCHEMA[pa.apiname]
       : null;
 
-    const remoteSchema = schemaMap.get(pa.apiname) || {};
-
-    const name = (localInfo && localInfo.name) 
-      || remoteSchema.displayName 
-      || `Succès #${pa.apiname}`;
-
-    const description = (localInfo && localInfo.description) 
-      || remoteSchema.description 
+    const name = (localInfo && localInfo.name) || `Achievement #${pa.apiname}`;
+    const description = (localInfo && localInfo.description)
       || (pa.achieved === 1 ? (currentLang === 'en' ? 'Unlocked achievement' : 'Succès débloqué') : t('secretAchievement'));
 
-    const icon = (localInfo && localInfo.icon) 
-      || remoteSchema.icon 
+    const icon = (localInfo && localInfo.icon)
       || (pa.achieved === 1 ? 'https://placehold.co/64x64/2a475e/ffffff?text=OK' : 'https://placehold.co/64x64/232b35/8f98a0?text=?');
+    const icongray = (localInfo && localInfo.icongray) || icon;
 
-    const icongray = (localInfo && localInfo.icongray) 
-      || remoteSchema.icongray 
-      || (localInfo && localInfo.icon)
-      || icon;
-
-    // Déterminer la note FR : 1. Note existante, 2. Explication du schéma, 3. Base locale de guide
+    // French note lookup
     let note = existingNotesMap.get(pa.apiname) || '';
     if (!note && localInfo && localInfo.explication) {
       note = localInfo.explication;
@@ -716,7 +369,7 @@ function applyPlayerAchievementsData(playerAchievements, schemaMap = new Map()) 
       note = getAchievementGuide(pa.apiname, name, 'fr');
     }
 
-    // Déterminer la note EN : 1. Note EN existante, 2. Explication EN du schéma, 3. Base locale de guide EN
+    // English note lookup
     let note_en = existingNotesEnMap.get(pa.apiname) || '';
     if (!note_en && localInfo && localInfo.explication_en) {
       note_en = localInfo.explication_en;
@@ -739,21 +392,106 @@ function applyPlayerAchievementsData(playerAchievements, schemaMap = new Map()) 
     };
   });
 
-  saveAchievementsToLocal();
+  saveAchievementsToStorage(achievements);
   showTrackerView();
 }
 
 /**
- * Configuration de l'ensemble des écouteurs d'événements
+ * Handles fetching achievements from Steam API with fallback to manual copy-paste.
+ */
+async function syncSteamData() {
+  const apiKey = document.getElementById('steamApiKeyInput').value.trim();
+  const steamId = document.getElementById('steamIdInput').value.trim();
+  const statusEl = document.getElementById('apiStatusMessage');
+  const syncBtn = document.getElementById('syncSteamBtn');
+  const spinner = document.getElementById('syncSpinner');
+  const manualContainer = document.getElementById('manualPasteContainer');
+
+  if (!apiKey || !steamId) {
+    statusEl.className = 'text-xs text-rose-400 block py-1 text-center';
+    statusEl.innerText = t('statusEnterBoth');
+    return;
+  }
+
+  saveCredentials(steamId, apiKey);
+
+  syncBtn.disabled = true;
+  spinner.classList.remove('hidden');
+  statusEl.className = 'text-xs text-[#66c0f4] block py-1 text-center';
+  statusEl.innerText = t('statusAttempting');
+
+  const directSteamUrl = buildSteamApiUrl(apiKey, steamId);
+
+  try {
+    const rawAchievements = await fetchSteamAchievements(apiKey, steamId);
+    applyPlayerAchievementsData(rawAchievements);
+    showTrackerView();
+    showToast(t('toastSyncSuccess', achievements.length));
+  } catch (err) {
+    // On CORS block: open the direct Steam URL in a new tab and display raw paste box
+    window.open(directSteamUrl, '_blank');
+
+    if (manualContainer) {
+      manualContainer.classList.remove('hidden');
+      const textarea = document.getElementById('manualJsonInput');
+      if (textarea) textarea.focus();
+    }
+
+    statusEl.className = 'text-xs text-amber-300 block py-1 text-center';
+    statusEl.innerHTML = t('statusFallbackCors');
+  } finally {
+    if (syncBtn) syncBtn.disabled = false;
+    if (spinner) spinner.classList.add('hidden');
+  }
+}
+
+/**
+ * Validates and imports raw JSON pasted by the user.
+ */
+function processManualJson() {
+  const manualInput = document.getElementById('manualJsonInput');
+  if (!manualInput) return;
+  const raw = manualInput.value.trim();
+  if (!raw) {
+    showToast(t('toastPasteEmpty'));
+    return;
+  }
+
+  try {
+    const parsedData = parseAchievementsJson(raw);
+    if (!parsedData) {
+      showToast(t('toastInvalidSchema'));
+      return;
+    }
+
+    if (parsedData.type === 'steam') {
+      applyPlayerAchievementsData(parsedData.achievements);
+    } else {
+      achievements = parsedData.achievements;
+      enrichAchievementsMetadata(achievements);
+      saveAchievementsToStorage(achievements);
+      showTrackerView();
+    }
+
+    showToast(t('toastImportSuccess', achievements.length));
+    const manualContainer = document.getElementById('manualPasteContainer');
+    if (manualContainer) manualContainer.classList.add('hidden');
+  } catch (err) {
+    showToast(t('toastInvalidJson'));
+  }
+}
+
+/**
+ * Registers all UI event listeners.
  */
 function setupEventListeners() {
-  // Sélecteur de langue (FR / EN)
+  // Language toggles
   const langFrBtn = document.getElementById('langFrBtn');
   const langEnBtn = document.getElementById('langEnBtn');
-  if (langFrBtn) langFrBtn.addEventListener('click', () => setLanguage('fr'));
-  if (langEnBtn) langEnBtn.addEventListener('click', () => setLanguage('en'));
+  if (langFrBtn) langFrBtn.addEventListener('click', () => setLanguage('fr', renderAll));
+  if (langEnBtn) langEnBtn.addEventListener('click', () => setLanguage('en', renderAll));
 
-  // Bascule Affichage Connexion / Paramètres Steam
+  // Toggle Steam settings / Onboarding view
   const toggleBtn = document.getElementById('toggleConfigBtn');
   if (toggleBtn) {
     toggleBtn.addEventListener('click', () => {
@@ -767,7 +505,7 @@ function setupEventListeners() {
     });
   }
 
-  // Lien direct Steam vers JSON brut
+  // Open direct Steam API link
   const openLinkBtn = document.getElementById('openSteamDirectLinkBtn');
   if (openLinkBtn) {
     openLinkBtn.addEventListener('click', () => {
@@ -777,18 +515,17 @@ function setupEventListeners() {
         alert(t('alertMissingCreds'));
         return;
       }
-      const url = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid=250900&key=${apiKey}&steamid=${steamId}`;
-      window.open(url, '_blank');
+      window.open(buildSteamApiUrl(apiKey, steamId), '_blank');
     });
   }
 
-  // Import JSON brut collé manuellement
+  // Process manual JSON button
   const processBtn = document.getElementById('processManualJsonBtn');
   if (processBtn) {
     processBtn.addEventListener('click', processManualJson);
   }
 
-  // Auto-détection au collage dans le textarea
+  // Auto-detect JSON pasted into the textarea
   const manualTextarea = document.getElementById('manualJsonInput');
   if (manualTextarea) {
     manualTextarea.addEventListener('input', () => {
@@ -799,28 +536,7 @@ function setupEventListeners() {
     });
   }
 
-  function processManualJson() {
-    const raw = document.getElementById('manualJsonInput').value.trim();
-    if (!raw) {
-      showToast(t('toastPasteEmpty'));
-      return;
-    }
-    try {
-      const parsed = JSON.parse(raw);
-      if (parsed.playerstats && Array.isArray(parsed.playerstats.achievements)) {
-        applyPlayerAchievementsData(parsed.playerstats.achievements);
-        showToast(t('toastImportSuccess', parsed.playerstats.achievements.length));
-        const manualContainer = document.getElementById('manualPasteContainer');
-        if (manualContainer) manualContainer.classList.add('hidden');
-      } else {
-        showToast(t('toastInvalidSchema'));
-      }
-    } catch (err) {
-      showToast(t('toastInvalidJson'));
-    }
-  }
-
-  // Onglets de filtre
+  // Filter tabs
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -830,7 +546,7 @@ function setupEventListeners() {
     });
   });
 
-  // Recherche en direct
+  // Live search input
   const searchInput = document.getElementById('searchInput');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
@@ -839,40 +555,34 @@ function setupEventListeners() {
     });
   }
 
-  // Bouton de synchronisation Steam
+  // Steam API sync button
   const syncBtn = document.getElementById('syncSteamBtn');
   if (syncBtn) {
     syncBtn.addEventListener('click', syncSteamData);
   }
 
-  // Bouton de restauration données de démonstration
+  // Load demo data button
   const demoBtn = document.getElementById('loadDemoBtn');
   if (demoBtn) {
     demoBtn.addEventListener('click', () => {
-      achievements = [...ISAAC_DEMO_DATA];
+      achievements = (typeof ISAAC_DEMO_DATA !== 'undefined') ? [...ISAAC_DEMO_DATA] : [];
       enrichAchievementsMetadata(achievements);
-      saveAchievementsToLocal();
+      saveAchievementsToStorage(achievements);
       showTrackerView();
       showToast(t('toastDemoLoaded'));
     });
   }
 
-  // Export JSON
+  // Export JSON button
   const exportBtn = document.getElementById('exportNotesBtn');
   if (exportBtn) {
     exportBtn.addEventListener('click', () => {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(achievements, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `isaac_achievements_${new Date().toISOString().slice(0, 10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
+      exportAchievementsToJson(achievements);
       showToast(t('toastExported'));
     });
   }
 
-  // Import JSON sauvegardé
+  // Import JSON file input
   const importInput = document.getElementById('importFileInput');
   if (importInput) {
     importInput.addEventListener('change', (e) => {
@@ -882,16 +592,20 @@ function setupEventListeners() {
       const reader = new FileReader();
       reader.onload = (event) => {
         try {
-          const imported = JSON.parse(event.target.result);
-          if (Array.isArray(imported)) {
-            achievements = imported;
-            enrichAchievementsMetadata(achievements);
-            saveAchievementsToLocal();
-            showTrackerView();
-            showToast(t('toastImportSuccess', achievements.length));
-          } else {
+          const parsedData = parseAchievementsJson(event.target.result);
+          if (!parsedData) {
             showToast(t('toastInvalidSchema'));
+            return;
           }
+          if (parsedData.type === 'steam') {
+            applyPlayerAchievementsData(parsedData.achievements);
+          } else {
+            achievements = parsedData.achievements;
+            enrichAchievementsMetadata(achievements);
+            saveAchievementsToStorage(achievements);
+            showTrackerView();
+          }
+          showToast(t('toastImportSuccess', achievements.length));
         } catch (err) {
           showToast(t('toastFileReadError'));
         }
@@ -901,5 +615,5 @@ function setupEventListeners() {
   }
 }
 
-// Initialisation au chargement de la page
+// Bootstrap on DOM ready
 window.addEventListener('DOMContentLoaded', init);

@@ -18,7 +18,11 @@ const TRANSLATIONS = {
     importJson: "Importer JSON",
     importTitle: "Importer un fichier JSON de succès",
     
-    // Onboarding view
+    // Onboarding & Welcome view
+    welcomeTitle: "Bienvenue sur Isaac Tracker",
+    welcomeDesc: "Suivez vos 641 succès, consultez les guides de déblocage bilingues et filtrez par personnage ou DLC.",
+    btnConnectSteam: "Connecter mon compte Steam",
+    closeModal: "Fermer",
     onboardingTitle: "Connexion Steam Tracker",
     onboardingDesc: "Connectez votre compte pour récupérer vos succès et les guides de déblocage.",
     btnGetSteamId: "Récupérer mon Steam ID",
@@ -99,7 +103,11 @@ const TRANSLATIONS = {
     importJson: "Import JSON",
     importTitle: "Import achievements JSON file",
     
-    // Onboarding view
+    // Onboarding & Welcome view
+    welcomeTitle: "Welcome to Isaac Tracker",
+    welcomeDesc: "Track all 641 achievements, browse bilingual unlock guides, and filter by character or DLC.",
+    btnConnectSteam: "Connect Steam Account",
+    closeModal: "Close",
     onboardingTitle: "Steam Tracker Connection",
     onboardingDesc: "Connect your account to fetch your achievements and unlock guides.",
     btnGetSteamId: "Find my Steam ID",

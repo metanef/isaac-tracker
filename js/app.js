@@ -48,6 +48,7 @@ function showTrackerView() {
   const dashboard = document.getElementById('trackerDashboardSection');
   if (onboarding) onboarding.classList.add('hidden');
   if (dashboard) dashboard.classList.remove('hidden');
+  closeSteamSettingsModal();
   renderAll();
 }
 
@@ -59,6 +60,31 @@ function showOnboardingView() {
   const dashboard = document.getElementById('trackerDashboardSection');
   if (onboarding) onboarding.classList.remove('hidden');
   if (dashboard) dashboard.classList.add('hidden');
+}
+
+/**
+ * Opens the Steam settings modal pop up.
+ */
+function openSteamSettingsModal() {
+  const modal = document.getElementById('steamSettingsModal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+
+  const steamIdInput = document.getElementById('steamIdInput');
+  if (steamIdInput) {
+    setTimeout(() => steamIdInput.focus(), 50);
+  }
+}
+
+/**
+ * Closes the Steam settings modal pop up.
+ */
+function closeSteamSettingsModal() {
+  const modal = document.getElementById('steamSettingsModal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
 }
 
 /**
@@ -592,17 +618,53 @@ function setupEventListeners() {
   if (langFrBtn) langFrBtn.addEventListener('click', () => setLanguage('fr', renderAll));
   if (langEnBtn) langEnBtn.addEventListener('click', () => setLanguage('en', renderAll));
 
-  // Toggle Steam settings / Onboarding view
+  // Open Steam settings modal via header button
   const toggleBtn = document.getElementById('toggleConfigBtn');
   if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-      const onboarding = document.getElementById('onboardingSection');
-      if (onboarding) {
-        onboarding.classList.toggle('hidden');
-        if (!onboarding.classList.contains('hidden')) {
-          onboarding.scrollIntoView({ behavior: 'smooth' });
-        }
+    toggleBtn.addEventListener('click', openSteamSettingsModal);
+  }
+
+  // Open Steam settings modal via welcome screen button
+  const welcomeConnectBtn = document.getElementById('welcomeConnectBtn');
+  if (welcomeConnectBtn) {
+    welcomeConnectBtn.addEventListener('click', openSteamSettingsModal);
+  }
+
+  // Close modal via close button
+  const closeBtn = document.getElementById('closeSettingsModalBtn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeSteamSettingsModal);
+  }
+
+  // Close modal on backdrop click
+  const settingsModal = document.getElementById('steamSettingsModal');
+  if (settingsModal) {
+    settingsModal.addEventListener('click', (e) => {
+      if (e.target === settingsModal) {
+        closeSteamSettingsModal();
       }
+    });
+  }
+
+  // Close modal on Escape key
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('steamSettingsModal');
+      if (modal && !modal.classList.contains('hidden')) {
+        closeSteamSettingsModal();
+      }
+    }
+  });
+
+  // Welcome demo button
+  const welcomeDemoBtn = document.getElementById('welcomeDemoBtn');
+  if (welcomeDemoBtn) {
+    welcomeDemoBtn.addEventListener('click', () => {
+      achievements = (typeof ISAAC_DEMO_DATA !== 'undefined') ? [...ISAAC_DEMO_DATA] : [];
+      enrichAchievementsMetadata(achievements);
+      saveAchievementsToStorage(achievements);
+      showTrackerView();
+      showToast(t('toastDemoLoaded'));
     });
   }
 

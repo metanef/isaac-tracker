@@ -67,82 +67,119 @@
   <!-- Main Container -->
   <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6">
 
-    <!-- Onboarding / Steam Connection Card (3 buttons and input slots) -->
-    <section id="onboardingSection" class="max-w-2xl mx-auto my-6 steam-card p-6 sm:p-8 rounded-lg shadow-2xl border border-[#2d3f54]">
-      <div class="text-center mb-6">
-        <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#1b2838] border border-[#35485e] mb-3 shadow-inner">
-          <svg class="w-8 h-8 text-[#66c0f4]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2a10 10 0 0 0-10 10c0 4.9 3.5 8.9 8.2 9.8l2.6-3.8a3 3 0 0 1-1.3-.3l-3.3 1.3a7.8 7.8 0 0 1-1-1.7l3.7-1.5a3 3 0 0 1 4.1-1.7l3.5-2.6a4.8 4.8 0 0 1 .2-1.3 5 5 0 0 1 5 5 5 5 0 0 1-5 5l-2.6 3.6A10 10 0 1 0 12 2zm6.7 12.3a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-          </svg>
-        </div>
-        <h2 class="text-xl font-bold text-[#ebebeb] tracking-wide" data-i18n="onboardingTitle">Connexion Steam Tracker</h2>
-        <p class="text-xs text-[#8f98a0] mt-1" data-i18n="onboardingDesc">Connectez votre compte pour récupérer vos succès et les guides de déblocage.</p>
+    <!-- Onboarding / Welcome Initial State Card (shown when no data is loaded yet) -->
+    <section id="onboardingSection" class="max-w-2xl mx-auto my-12 steam-card p-8 rounded-lg shadow-2xl border border-[#2d3f54] text-center">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#1b2838] border border-[#35485e] mb-4 shadow-inner">
+        <svg class="w-9 h-9 text-[#66c0f4]" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2a10 10 0 0 0-10 10c0 4.9 3.5 8.9 8.2 9.8l2.6-3.8a3 3 0 0 1-1.3-.3l-3.3 1.3a7.8 7.8 0 0 1-1-1.7l3.7-1.5a3 3 0 0 1 4.1-1.7l3.5-2.6a4.8 4.8 0 0 1 .2-1.3 5 5 0 0 1 5 5 5 5 0 0 1-5 5l-2.6 3.6A10 10 0 1 0 12 2zm6.7 12.3a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+        </svg>
       </div>
-
-      <div class="space-y-4">
-        <!-- Row 1: Get Steam ID Button + Input field on right -->
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-          <a href="https://steamid.io/" target="_blank" rel="noopener noreferrer" class="sm:w-56 flex-shrink-0 bg-[#212c3d] hover:bg-[#2b3a4f] text-[#66c0f4] hover:text-white border border-[#314259] font-medium text-xs py-2.5 px-3 rounded text-center transition flex items-center justify-center gap-1.5 shadow-sm">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-            <span data-i18n="btnGetSteamId">Récupérer mon Steam ID</span>
-          </a>
-          <input type="text" id="steamIdInput" data-i18n-placeholder="placeholderSteamId" placeholder="Collez votre SteamID64 ici (17 chiffres)" class="glass-input flex-1 px-3.5 py-2.5 rounded text-xs outline-none focus:border-[#66c0f4]">
-        </div>
-
-        <!-- Row 2: Get API Key Button + Input field on right -->
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-          <a href="https://steamcommunity.com/dev/apikey" target="_blank" rel="noopener noreferrer" class="sm:w-56 flex-shrink-0 bg-[#212c3d] hover:bg-[#2b3a4f] text-[#66c0f4] hover:text-white border border-[#314259] font-medium text-xs py-2.5 px-3 rounded text-center transition flex items-center justify-center gap-1.5 shadow-sm">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-            </svg>
-            <span data-i18n="btnGetApiKey">Récupérer ma Clé API</span>
-          </a>
-          <input type="password" id="steamApiKeyInput" data-i18n-placeholder="placeholderApiKey" placeholder="Collez votre clé API Steam ici" class="glass-input flex-1 px-3.5 py-2.5 rounded text-xs outline-none focus:border-[#66c0f4]">
-        </div>
-
-        <!-- Row 3: Full-width Fetch JSON Button -->
-        <div>
-          <button id="syncSteamBtn" class="w-full bg-[#1999e3] hover:bg-[#41b5f7] text-white font-bold text-sm py-3 px-4 rounded shadow-lg transition flex items-center justify-center gap-2">
-            <span id="syncSpinner" class="hidden animate-spin">&#9696;</span>
-            <span data-i18n="btnFetchData">Récupérer les données JSON de mes succès</span>
-          </button>
-        </div>
-
-        <!-- Status message -->
-        <div id="apiStatusMessage" class="text-xs text-center hidden py-1"></div>
-
-        <!-- Manual JSON paste box (revealed on CORS block) -->
-        <div id="manualPasteContainer" class="hidden mt-4 pt-4 border-t border-[#232f3f] bg-[#121820] p-4 rounded border border-[#26374a]">
-          <div class="flex items-start gap-2 mb-2">
-            <span class="text-sm">🛡️</span>
-            <div>
-              <h4 class="text-xs font-bold text-[#66c0f4]" data-i18n="corsTitle">Lien Steam ouvert dans un nouvel onglet</h4>
-              <p class="text-[11px] text-[#8f98a0] mt-0.5" data-i18n="corsDesc">
-                Sur la page Steam : faites <strong>Ctrl+A</strong> puis <strong>Ctrl+C</strong> pour tout copier, puis collez le contenu ci-dessous :
-              </p>
-            </div>
-          </div>
-          <textarea id="manualJsonInput" rows="4" data-i18n-placeholder="placeholderManualJson" placeholder='Collez tout le texte JSON brut ici (commençant par {"playerstats": ...})' class="w-full bg-[#090d13] border border-[#27384c] rounded p-2.5 text-xs text-[#ebebeb] font-mono outline-none focus:border-[#66c0f4] mb-2"></textarea>
-          <div class="flex flex-wrap justify-between items-center gap-2">
-            <button type="button" id="openSteamDirectLinkBtn" data-i18n="reopenSteamLink" class="text-[11px] text-[#8f98a0] hover:text-[#66c0f4] underline">
-              Rouvrir la page Steam API
-            </button>
-            <button type="button" id="processManualJsonBtn" data-i18n="btnProcessJson" class="bg-[#1999e3] hover:bg-[#41b5f7] text-white font-semibold text-xs py-2 px-4 rounded transition">
-              Valider et charger mes succès
-            </button>
-          </div>
-        </div>
-
-        <!-- Demo Data Shortcut -->
-        <div class="pt-2 flex items-center justify-end text-xs text-[#626a75] border-t border-[#222d3c]/50">
-          <button id="loadDemoBtn" data-i18n="btnLoadDemo" class="hover:text-[#66c0f4] underline transition">
-            Charger les données de démo
-          </button>
-        </div>
+      <h2 class="text-xl sm:text-2xl font-bold text-[#ebebeb] tracking-wide mb-2" data-i18n="welcomeTitle">Bienvenue sur Isaac Tracker</h2>
+      <p class="text-xs sm:text-sm text-[#8f98a0] max-w-md mx-auto mb-6" data-i18n="welcomeDesc">Suivez vos 641 succès, consultez les guides de déblocage bilingues et filtrez par personnage ou DLC.</p>
+      
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-sm mx-auto">
+        <button id="welcomeConnectBtn" class="w-full sm:w-auto bg-[#1999e3] hover:bg-[#41b5f7] text-white font-semibold text-xs py-2.5 px-5 rounded shadow-lg transition flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+          </svg>
+          <span data-i18n="btnConnectSteam">Connecter mon compte Steam</span>
+        </button>
+        <button id="welcomeDemoBtn" class="w-full sm:w-auto bg-[#212c3d] hover:bg-[#2b3a4f] text-[#c7d5e0] font-medium text-xs py-2.5 px-4 rounded border border-[#314259] transition" data-i18n="btnLoadDemo">
+          Charger les données de démo
+        </button>
       </div>
     </section>
+
+    <!-- Steam Settings Modal Pop up -->
+    <div id="steamSettingsModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0a0f16]/80 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="modalSettingsTitle">
+      <div class="steam-card w-full max-w-2xl rounded-lg shadow-2xl border border-[#2d3f54] relative max-h-[90vh] flex flex-col overflow-hidden animate-modal">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-[#253344] bg-[#121923]">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-[#1b2838] border border-[#35485e] flex items-center justify-center flex-shrink-0 shadow-inner">
+              <svg class="w-5 h-5 text-[#66c0f4]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2a10 10 0 0 0-10 10c0 4.9 3.5 8.9 8.2 9.8l2.6-3.8a3 3 0 0 1-1.3-.3l-3.3 1.3a7.8 7.8 0 0 1-1-1.7l3.7-1.5a3 3 0 0 1 4.1-1.7l3.5-2.6a4.8 4.8 0 0 1 .2-1.3 5 5 0 0 1 5 5 5 5 0 0 1-5 5l-2.6 3.6A10 10 0 1 0 12 2zm6.7 12.3a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+              </svg>
+            </div>
+            <div>
+              <h2 id="modalSettingsTitle" class="text-base font-bold text-[#ebebeb] tracking-wide" data-i18n="onboardingTitle">Connexion Steam Tracker</h2>
+              <p class="text-xs text-[#8f98a0]" data-i18n="onboardingDesc">Connectez votre compte pour récupérer vos succès et les guides de déblocage.</p>
+            </div>
+          </div>
+          <!-- Close button -->
+          <button id="closeSettingsModalBtn" class="text-[#8f98a0] hover:text-[#ebebeb] p-1.5 rounded hover:bg-[#212c3d] transition" aria-label="Close modal">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Modal Body (Scrollable) -->
+        <div class="p-6 overflow-y-auto space-y-4">
+          <!-- Row 1: Get Steam ID Button + Input field on right -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+            <a href="https://steamid.io/" target="_blank" rel="noopener noreferrer" class="sm:w-56 flex-shrink-0 bg-[#212c3d] hover:bg-[#2b3a4f] text-[#66c0f4] hover:text-white border border-[#314259] font-medium text-xs py-2.5 px-3 rounded text-center transition flex items-center justify-center gap-1.5 shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              <span data-i18n="btnGetSteamId">Récupérer mon Steam ID</span>
+            </a>
+            <input type="text" id="steamIdInput" data-i18n-placeholder="placeholderSteamId" placeholder="Collez votre SteamID64 ici (17 chiffres)" class="glass-input flex-1 px-3.5 py-2.5 rounded text-xs outline-none focus:border-[#66c0f4]">
+          </div>
+
+          <!-- Row 2: Get API Key Button + Input field on right -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+            <a href="https://steamcommunity.com/dev/apikey" target="_blank" rel="noopener noreferrer" class="sm:w-56 flex-shrink-0 bg-[#212c3d] hover:bg-[#2b3a4f] text-[#66c0f4] hover:text-white border border-[#314259] font-medium text-xs py-2.5 px-3 rounded text-center transition flex items-center justify-center gap-1.5 shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+              </svg>
+              <span data-i18n="btnGetApiKey">Récupérer ma Clé API</span>
+            </a>
+            <input type="password" id="steamApiKeyInput" data-i18n-placeholder="placeholderApiKey" placeholder="Collez votre clé API Steam ici" class="glass-input flex-1 px-3.5 py-2.5 rounded text-xs outline-none focus:border-[#66c0f4]">
+          </div>
+
+          <!-- Row 3: Full-width Fetch JSON Button -->
+          <div>
+            <button id="syncSteamBtn" class="w-full bg-[#1999e3] hover:bg-[#41b5f7] text-white font-bold text-sm py-3 px-4 rounded shadow-lg transition flex items-center justify-center gap-2">
+              <span id="syncSpinner" class="hidden animate-spin">&#9696;</span>
+              <span data-i18n="btnFetchData">Récupérer les données JSON de mes succès</span>
+            </button>
+          </div>
+
+          <!-- Status message -->
+          <div id="apiStatusMessage" class="text-xs text-center hidden py-1"></div>
+
+          <!-- Manual JSON paste box (revealed on CORS block) -->
+          <div id="manualPasteContainer" class="hidden mt-4 pt-4 border-t border-[#232f3f] bg-[#121820] p-4 rounded border border-[#26374a]">
+            <div class="flex items-start gap-2 mb-2">
+              <span class="text-sm">🛡️</span>
+              <div>
+                <h4 class="text-xs font-bold text-[#66c0f4]" data-i18n="corsTitle">Lien Steam ouvert dans un nouvel onglet</h4>
+                <p class="text-[11px] text-[#8f98a0] mt-0.5" data-i18n="corsDesc">
+                  Sur la page Steam : faites <strong>Ctrl+A</strong> puis <strong>Ctrl+C</strong> pour tout copier, puis collez le contenu ci-dessous :
+                </p>
+              </div>
+            </div>
+            <textarea id="manualJsonInput" rows="4" data-i18n-placeholder="placeholderManualJson" placeholder='Collez tout le texte JSON brut ici (commençant par {"playerstats": ...})' class="w-full bg-[#090d13] border border-[#27384c] rounded p-2.5 text-xs text-[#ebebeb] font-mono outline-none focus:border-[#66c0f4] mb-2"></textarea>
+            <div class="flex flex-wrap justify-between items-center gap-2">
+              <button type="button" id="openSteamDirectLinkBtn" data-i18n="reopenSteamLink" class="text-[11px] text-[#8f98a0] hover:text-[#66c0f4] underline">
+                Rouvrir la page Steam API
+              </button>
+              <button type="button" id="processManualJsonBtn" data-i18n="btnProcessJson" class="bg-[#1999e3] hover:bg-[#41b5f7] text-white font-semibold text-xs py-2 px-4 rounded transition">
+                Valider et charger mes succès
+              </button>
+            </div>
+          </div>
+
+          <!-- Demo Data Shortcut -->
+          <div class="pt-2 flex items-center justify-end text-xs text-[#626a75] border-t border-[#222d3c]/50">
+            <button id="loadDemoBtn" data-i18n="btnLoadDemo" class="hover:text-[#66c0f4] underline transition">
+              Charger les données de démo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Achievements Tracker Dashboard (shown once data is loaded) -->
     <section id="trackerDashboardSection" class="hidden">

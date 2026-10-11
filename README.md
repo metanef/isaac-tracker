@@ -57,6 +57,7 @@ Open [index.html](index.html) in any modern web browser:
 - [x] JSON export and import capabilities
 - [x] Offline demo dataset for quick testing without credentials
 - [x] **Character & DLC Tagging**: Filter achievements by specific characters (e.g. The Lost, Lilith, Tainted) or game versions (Rebirth, Afterbirth, Repentance)
+- [x] **Steam Settings Modal**: Steam settings is now a pop-up dialog with background blur overlay, close button, and Escape key dismissal
 - [x] Modular architecture (`i18n.js`, `storage.js`, `steam-api.js`, `app.js`, `isaac_schema.js`)
 - [x] Clean codebase with zero redundancy and English comments
 
@@ -66,6 +67,5 @@ Open [index.html](index.html) in any modern web browser:
 - [ ] **Update readme**: Update readme.md file with new markdown template.
 - [ ] **Deploy**: Deploy the application to a github page.
 - [ ] **Update 404 page**: Update 404 page to match the new design.
-- [ ] Steam settings should be a pop up
 - [ ] **Autofetch stats**
 - [ ] l'zcriture des conditions de déblocage n'est pas alignée avec "comment débloquer :"

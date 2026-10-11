@@ -94,7 +94,6 @@ Open [index.html](index.html) in any modern web browser, or host with any static
 
 ### ⏳ Upcoming Features / Backlog
 
-- [ ] **Global Completion Stats**: Fetch and display global player unlock percentages from Steam Community data.
 - [ ] **Autofetch stats**
 
 ## 🛡️ Privacy & Security
@@ -104,4 +103,4 @@ Open [index.html](index.html) in any modern web browser, or host with any static
 
 ## ⚖️ Disclaimer
 
-© Valve Corporation. Steam and the Steam logo are registered trademarks of Valve Corporation. *The Binding of Isaac: Rebirth* is a registered trademark of Edmund McMillen and Nicalis, Inc. This application is an open-source, non-commercial fan tool.
+© Valve Corporation. Steam and the Steam logo are registered trademarks of Valve Corporation. _The Binding of Isaac: Rebirth_ is a registered trademark of Edmund McMillen and Nicalis, Inc. This application is an open-source, non-commercial fan tool.

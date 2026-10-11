@@ -45,6 +45,7 @@ Open [index.html](index.html) in any modern web browser:
 ### ✅ Implemented Features
 - [x] Complete database of all 641 achievements with official Steam icons and descriptions
 - [x] Bilingual unlock guides (English & French) with instant language toggle (`FR` / `EN`)
+- [x] Compact cards layout with reduced vertical footprint and sleek 44px icons
 - [x] Dedicated `data/` folder separating raw datasets and schemas from JavaScript logic
 - [x] Steam Web API synchronization with resilient CORS proxy relays
 - [x] Fallback manual JSON import for private networks or CORS restrictions
@@ -58,6 +59,5 @@ Open [index.html](index.html) in any modern web browser:
 - [x] Clean codebase with zero redundancy and English comments
 
 ### ⏳ Upcoming Features / Backlog
-- [ ] **Compact Cards Layout**: Refine and compact achievement cards to reduce vertical footprint and screen space usage.
 - [ ] **Character & DLC Tagging**: Filter achievements by specific characters (e.g. The Lost, Lilith, Tainted) or game versions (Rebirth, Afterbirth, Repentance).
 - [ ] **Global Completion Stats**: Fetch and display global player unlock percentages from Steam Community data.

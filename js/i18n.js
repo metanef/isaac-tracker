@@ -66,8 +66,8 @@ const TRANSLATIONS = {
     guideHeadingUnlocked: "Méthode de déblocage",
     
     // Sections
-    sectionLockedHeader: "🎯 Succès Restants à Débloquer",
-    sectionUnlockedHeader: "✅ Succès Déjà Débloqués",
+    sectionLockedHeader: "Succès Restants à Débloquer",
+    sectionUnlockedHeader: "Succès Déjà Débloqués",
     
     // Empty state
     emptyTitle: "Aucun succès trouvé",
@@ -146,8 +146,8 @@ const TRANSLATIONS = {
     guideHeadingUnlocked: "Unlock method",
     
     // Sections
-    sectionLockedHeader: "🎯 Remaining Locked Achievements",
-    sectionUnlockedHeader: "✅ Unlocked Achievements",
+    sectionLockedHeader: "Remaining Locked Achievements",
+    sectionUnlockedHeader: "Unlocked Achievements",
     
     // Empty state
     emptyTitle: "No achievements found",

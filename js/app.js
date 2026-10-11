@@ -154,14 +154,14 @@ function updateStats() {
 }
 
 /**
- * Constructs an achievement card DOM element.
+ * Constructs a compact achievement card DOM element.
  * @param {Object} item - Achievement data object
  * @returns {HTMLElement} Card DOM element
  */
 function createCardElement(item) {
   const card = document.createElement('div');
   const isLocked = item.achieved === 0;
-  card.className = `steam-card rounded p-3 relative group ${isLocked ? 'is-locked' : 'is-unlocked'}`;
+  card.className = `steam-card rounded p-2.5 relative group ${isLocked ? 'is-locked' : 'is-unlocked'}`;
   card.id = `card-${item.id}`;
 
   const dateText = item.achieved === 1 ? formatSteamDate(item.unlockTime) : '';
@@ -187,56 +187,56 @@ function createCardElement(item) {
   const isAutoExpanded = isLocked && hasGuide;
 
   card.innerHTML = `
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-      <!-- Left: Icon and Achievement Details -->
-      <div class="flex items-start gap-4 flex-1 min-w-0">
-        <div class="w-16 h-16 flex-shrink-0 bg-[#0d1218] border border-[#3b4b5e]/40 rounded overflow-hidden flex items-center justify-center shadow-inner">
+    <div class="flex items-center justify-between gap-3">
+      <!-- Left: Compact 44px Icon and Achievement Details -->
+      <div class="flex items-center gap-3 flex-1 min-w-0">
+        <div class="w-11 h-11 flex-shrink-0 bg-[#0d1218] border border-[#3b4b5e]/40 rounded overflow-hidden flex items-center justify-center shadow-inner">
           <img src="${iconUrl}" alt="${item.name}" class="w-full h-full object-cover select-none" onerror="this.onerror=null;this.src='https://placehold.co/64x64/1d2531/8f98a0?text=?';">
         </div>
 
         <div class="min-w-0 flex-1">
           <div class="flex items-center gap-2 flex-wrap">
-            <h3 class="text-base font-semibold text-[#ebebeb] tracking-wide">${item.name}</h3>
+            <h3 class="text-sm font-semibold text-[#ebebeb] tracking-wide truncate max-w-[260px] sm:max-w-none">${item.name}</h3>
             ${isLocked
               ? `<span class="badge-locked guide-badge">${t('badgeLocked')}</span>`
               : `<span class="badge-unlocked guide-badge">${t('badgeUnlocked')}</span>`}
+            ${percentText ? `<span class="text-[10px] text-[#626a75] hidden sm:inline">• ${percentText}</span>` : ''}
           </div>
-          <p class="text-xs text-[#8f98a0] mt-0.5 leading-relaxed">${item.description || t('secretAchievement')}</p>
-          ${percentText ? `<p class="text-[11px] text-[#626a75] mt-1">${percentText}</p>` : ''}
+          <p class="text-xs text-[#8f98a0] mt-0.5 leading-snug line-clamp-1 sm:line-clamp-none">${item.description || t('secretAchievement')}</p>
+          <div class="flex items-center gap-2 mt-0.5 text-[11px] text-[#626a75] sm:hidden">
+            <span>${dateText || t('toUnlock')}</span>
+            ${percentText ? `<span>• ${percentText}</span>` : ''}
+          </div>
         </div>
       </div>
 
       <!-- Right: Date and Action Button -->
-      <div class="flex flex-row md:flex-col items-end justify-between md:justify-center flex-shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-[#222d3d]">
-        ${dateText
-          ? `<span class="text-xs text-[#8f98a0] font-normal tracking-tight">${dateText}</span>`
-          : `<span class="text-xs text-[#8f98a0] font-normal tracking-tight">${t('toUnlock')}</span>`}
+      <div class="flex items-center gap-2.5 flex-shrink-0">
+        <span class="text-xs text-[#8f98a0] font-normal tracking-tight hidden sm:inline">
+          ${dateText || t('toUnlock')}
+        </span>
 
         ${hasGuide ? `
-        <div class="mt-2">
-          <button onclick="toggleNoteEditor('${item.id}')" class="text-xs px-2.5 py-1 rounded bg-[#202936] hover:bg-[#2c394b] text-[#66c0f4] border border-[#2d3a4d] transition flex items-center gap-1.5" title="${isLocked ? t('guideTitleLocked') : t('guideTitleUnlocked')}">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <span>${isLocked ? t('guideBtn') : t('viewGuideBtn')}</span>
-          </button>
-        </div>
+        <button onclick="toggleNoteEditor('${item.id}')" class="text-xs px-2.5 py-1 rounded bg-[#202936] hover:bg-[#2c394b] text-[#66c0f4] border border-[#2d3a4d] transition flex items-center gap-1.5 shadow-sm" title="${isLocked ? t('guideTitleLocked') : t('guideTitleUnlocked')}">
+          <svg class="w-3.5 h-3.5 text-[#66c0f4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span>${isLocked ? t('guideBtn') : t('viewGuideBtn')}</span>
+        </button>
         ` : ''}
       </div>
     </div>
 
-    <!-- Unlock Method Section -->
+    <!-- Compact Unlock Method Box -->
     ${hasGuide ? `
-    <div id="note-section-${item.id}" class="${isAutoExpanded ? 'block' : 'hidden'} mt-3 pt-3 border-t border-[#232f3e]/80">
-      <div class="guide-box ${isLocked ? '' : 'is-unlocked-card'} p-3 rounded">
-        <div class="flex items-center gap-2 mb-1.5 pb-1 border-b border-white/5">
-          <span class="text-xs font-semibold ${isLocked ? 'text-[#66c0f4]' : 'text-[#66e099]'} tracking-wide">
-            ${isLocked ? t('guideHeadingLocked') : t('guideHeadingUnlocked')}
-          </span>
-        </div>
-        <div class="text-xs text-[#dbe4ee] leading-relaxed py-0.5 px-0.5">
+    <div id="note-section-${item.id}" class="${isAutoExpanded ? 'block' : 'hidden'} mt-2 pt-2 border-t border-[#232f3e]/60">
+      <div class="guide-box ${isLocked ? '' : 'is-unlocked-card'} px-2.5 py-1.5 rounded flex items-start gap-2">
+        <span class="text-[10px] font-bold ${isLocked ? 'text-[#66c0f4]' : 'text-[#66e099]'} uppercase tracking-wider flex-shrink-0 mt-0.5">
+          ${isLocked ? t('guideHeadingLocked') : t('guideHeadingUnlocked')}:
+        </span>
+        <p class="text-xs text-[#dbe4ee] leading-relaxed">
           ${guideText}
-        </div>
+        </p>
       </div>
     </div>
     ` : ''}

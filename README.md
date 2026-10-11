@@ -1,30 +1,31 @@
 # The Binding of Isaac - Steam Achievements Tracker
 
-Application web de suivi et guide de déblocage des succès Steam pour **The Binding of Isaac: Rebirth / Repentance**.
+Web application for tracking and guiding unlock methods for Steam achievements in **The Binding of Isaac: Rebirth / Repentance**.
 
-## 🎮 Présentation
+## 🎮 Features
 
-Cette application permet de :
+This application lets you:
 
-- Consulter l'ensemble des 641 succès de The Binding of Isaac.
-- Synchroniser vos succès débloqués et verrouillés depuis votre profil Steam.
-- Afficher les méthodes de déblocage et solutions détaillées pour chaque succès à accomplir.
-- Filtrer par état (Tous, Verrouillés, Déverrouillés) et rechercher en direct.
-- Sauvegarder automatiquement votre progression dans votre navigateur (`localStorage`) ou exporter/importer vos données au format JSON.
+- Browse all 641 achievements for The Binding of Isaac.
+- Synchronize your unlocked and locked achievements directly from your Steam profile.
+- View detailed unlock methods and solutions for every achievement.
+- Filter by status (All, Locked, Unlocked) with instant live search.
+- Automatically save your progress in the browser (`localStorage`) or export/import your data in JSON format.
+- Switch seamlessly between English and French at any time.
 
-## 📁 Architecture du projet
+## 📁 Project Architecture
 
-- `isaac_steam_achievements_tracker.html` (ou `index.html`) : Structure HTML de l'application (version française par défaut avec sélecteur de langue).
-- `isaac_steam_achievements_tracker_en.html` (ou `index_en.html`) : Version anglaise directe (`lang="en"`).
-- `css/style.css` : Feuille de styles CSS personnalisée (thème Steam sombre, responsive, sélecteur FR/EN).
-- `js/isaac_schema.js` : Schéma officiel complet des 641 succès (noms, descriptions et icônes officielles Steam).
-- `js/achievements_guide.js` : Base de données des succès du jeu et méthodes de déblocage (guides / solutions).
-- `js/app.js` : Moteur applicatif (support bilingue i18n FR/EN, filtrage, recherche instantanée, synchronisation Steam API, mode secours direct et sauvegarde LocalStorage).
+- `index.html` (or `isaac_steam_achievements_tracker.html`): Main HTML structure with built-in language switcher (defaults to French or browser preference).
+- `index_en.html` (or `isaac_steam_achievements_tracker_en.html`): Direct English entry point (`lang="en"`).
+- `css/style.css`: Custom Steam dark theme CSS with responsive layout and language switcher styles.
+- `js/isaac_schema.js`: Complete official schema of all 641 achievements (official names, descriptions, and Steam icons).
+- `js/achievements_guide.js`: Unlock guides and solutions dataset.
+- `js/app.js`: Application logic (bilingual i18n support, filtering, live search, Steam API synchronization, direct CORS fallback, and LocalStorage management).
 
-## 🚀 Utilisation
+## 🚀 Usage
 
-Ouvrez simplement [isaac_steam_achievements_tracker.html](isaac_steam_achievements_tracker.html) ou [index.html](index.html) (ou [index_en.html](index_en.html) pour la version anglaise) dans n'importe quel navigateur web.
+Open [index.html](index.html) or [index_en.html](index_en.html) (or [isaac_steam_achievements_tracker.html](isaac_steam_achievements_tracker.html)) in any modern web browser.
 
-- **Langue** : Basculez à tout moment entre le français (`FR`) et l'anglais (`EN`) via le bouton dans l'en-tête (votre choix est mémorisé).
-- Entrez votre **SteamID64** et votre **Clé Web API Steam** via la page d'accueil ou le bouton **Paramètres Steam**.
-- Cliquez sur **Récupérer les données JSON de mes succès** pour synchroniser votre compte.
+- **Language**: Switch anytime between English (`EN`) and French (`FR`) via the header button (your preference is automatically saved).
+- Enter your **SteamID64** and **Steam Web API Key** on the onboarding page or through the **Steam Settings** button.
+- Click **Fetch Achievement JSON Data** to sync your profile.

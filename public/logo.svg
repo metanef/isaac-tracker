@@ -1,45 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
   <defs>
-    <radialGradient id="steamBg" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#22344d"/>
-      <stop offset="100%" stop-color="#121820"/>
-    </radialGradient>
     <linearGradient id="tearGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#80d0ff"/>
       <stop offset="100%" stop-color="#1999e3"/>
     </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.5"/>
-    </filter>
   </defs>
 
-  <!-- Background rounded squircle -->
-  <rect x="4" y="4" width="112" height="112" rx="28" fill="url(#steamBg)" stroke="#3b597c" stroke-width="2.5" filter="url(#shadow)"/>
+  <!-- Isaac Face scaled up to fill the full canvas -->
+  <g transform="translate(60, 60) scale(1.44) translate(-60, -62)">
+    <!-- Isaac Face Base -->
+    <circle cx="60" cy="62" r="38" fill="#f8cfb4" stroke="#2a1f18" stroke-width="3.5"/>
 
-  <!-- Isaac Face Base -->
-  <circle cx="60" cy="62" r="38" fill="#f8cfb4" stroke="#2a1f18" stroke-width="3.5"/>
+    <!-- Cheeks blush -->
+    <ellipse cx="36" cy="67" rx="6" ry="4" fill="#f5aa96" opacity="0.6"/>
+    <ellipse cx="84" cy="67" rx="6" ry="4" fill="#f5aa96" opacity="0.6"/>
 
-  <!-- Cheeks blush -->
-  <ellipse cx="36" cy="67" rx="6" ry="4" fill="#f5aa96" opacity="0.6"/>
-  <ellipse cx="84" cy="67" rx="6" ry="4" fill="#f5aa96" opacity="0.6"/>
+    <!-- Eyes -->
+    <circle cx="44" cy="58" r="9.5" fill="#1e1410"/>
+    <circle cx="76" cy="58" r="9.5" fill="#1e1410"/>
 
-  <!-- Eyes -->
-  <circle cx="44" cy="58" r="9.5" fill="#1e1410"/>
-  <circle cx="76" cy="58" r="9.5" fill="#1e1410"/>
+    <!-- Eye Highlights -->
+    <circle cx="41.5" cy="55.5" r="3" fill="#ffffff"/>
+    <circle cx="73.5" cy="55.5" r="3" fill="#ffffff"/>
 
-  <!-- Eye Highlights -->
-  <circle cx="41.5" cy="55.5" r="3" fill="#ffffff"/>
-  <circle cx="73.5" cy="55.5" r="3" fill="#ffffff"/>
+    <!-- Tears falling from eyes -->
+    <!-- Left Tear Stream -->
+    <path d="M42 66 C40 76, 37 84, 40 93 C42 98, 47 98, 48 93 C50 84, 47 76, 46 66 Z" fill="url(#tearGrad)" stroke="#1976b8" stroke-width="1.2"/>
+    <ellipse cx="44" cy="94" rx="2" ry="3" fill="#bce7ff"/>
 
-  <!-- Tears falling from eyes -->
-  <!-- Left Tear Stream -->
-  <path d="M42 66 C40 76, 37 84, 40 93 C42 98, 47 98, 48 93 C50 84, 47 76, 46 66 Z" fill="url(#tearGrad)" stroke="#1976b8" stroke-width="1.2"/>
-  <ellipse cx="44" cy="94" rx="2" ry="3" fill="#bce7ff"/>
+    <!-- Right Tear Stream -->
+    <path d="M74 66 C72 76, 69 84, 72 93 C74 98, 79 98, 80 93 C82 84, 79 76, 78 66 Z" fill="url(#tearGrad)" stroke="#1976b8" stroke-width="1.2"/>
+    <ellipse cx="76" cy="94" rx="2" ry="3" fill="#bce7ff"/>
 
-  <!-- Right Tear Stream -->
-  <path d="M74 66 C72 76, 69 84, 72 93 C74 98, 79 98, 80 93 C82 84, 79 76, 78 66 Z" fill="url(#tearGrad)" stroke="#1976b8" stroke-width="1.2"/>
-  <ellipse cx="76" cy="94" rx="2" ry="3" fill="#bce7ff"/>
-
-  <!-- Isaac Mouth (Sad little curve) -->
-  <path d="M54 75 Q60 70 66 75" fill="none" stroke="#2a1f18" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Isaac Mouth (Sad little curve) -->
+    <path d="M54 75 Q60 70 66 75" fill="none" stroke="#2a1f18" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
 </svg>

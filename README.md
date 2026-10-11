@@ -90,10 +90,10 @@ Open [index.html](index.html) in any modern web browser, or host with any static
 - [x] **Unlock Condition Text Alignment**: Pixel-perfect baseline alignment between "Comment débloquer :" label and unlock guide text
 - [x] **100% Pure JSON Data Layer**: Removed `isaac_schema.js`, decoupled guide logic into `js/app.js`, and standardized all datasets as pure JSON (`achievements.json` & `demo.json`)
 - [x] **Documentation & Header Refresh**: Standardized README with centered badge header, project logo, and updated architecture guide
+- [x] **Automated GitHub Pages Deployment**: Fully automated CI/CD deployment via GitHub Actions with `.nojekyll` configuration at [metanef.github.io/isaac-tracker](https://metanef.github.io/isaac-tracker/)
 
 ### ⏳ Upcoming Features / Backlog
 
-- [ ] **Deploy**: Deploy the application to a github page.
 - [ ] **Global Completion Stats**: Fetch and display global player unlock percentages from Steam Community data.
 - [ ] **Autofetch stats**
 

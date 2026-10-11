@@ -35,7 +35,7 @@ async function fetchSteamAchievements(apiKey, steamId) {
     const proxiedUrl = proxyGen(targetUrl);
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
       const resp = await fetch(proxiedUrl, { signal: controller.signal });
       clearTimeout(timeoutId);
 

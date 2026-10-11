@@ -162,9 +162,12 @@
             </div>
             <textarea id="manualJsonInput" rows="4" data-i18n-placeholder="placeholderManualJson" placeholder='Collez tout le texte JSON brut ici (commençant par {"playerstats": ...})' class="w-full bg-[#090d13] border border-[#27384c] rounded p-2.5 text-xs text-[#ebebeb] font-mono outline-none focus:border-[#66c0f4] mb-2"></textarea>
             <div class="flex flex-wrap justify-between items-center gap-2">
-              <button type="button" id="openSteamDirectLinkBtn" data-i18n="reopenSteamLink" class="text-[11px] text-[#8f98a0] hover:text-[#66c0f4] underline">
-                Rouvrir la page Steam API
-              </button>
+              <a id="openSteamDirectLinkBtn" href="#" target="_blank" rel="noopener noreferrer" class="text-xs text-[#66c0f4] hover:text-[#ebebeb] bg-[#1a2533] hover:bg-[#253549] border border-[#2d3f54] px-3 py-1.5 rounded transition inline-flex items-center gap-1.5 font-medium">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+                <span data-i18n="reopenSteamLink">Ouvrir la page Steam API</span>
+              </a>
               <button type="button" id="processManualJsonBtn" data-i18n="btnProcessJson" class="bg-[#1999e3] hover:bg-[#41b5f7] text-white font-semibold text-xs py-2 px-4 rounded transition">
                 Valider et charger mes succès
               </button>

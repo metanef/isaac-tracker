@@ -32,13 +32,14 @@ const TRANSLATIONS = {
     btnFetchData: "Récupérer les données JSON de mes succès",
     statusEnterBoth: "Veuillez renseigner à la fois votre Steam ID et votre Clé API.",
     statusAttempting: "Tentative de récupération automatique...",
-    statusFallbackCors: "Onglet Steam ouvert dans le navigateur.<br>Faites <strong>Ctrl+A</strong> puis <strong>Ctrl+C</strong> et collez le JSON brut dans la zone ci-dessous.",
+    statusFallbackCors: "Onglet Steam ouvert dans le navigateur !<br>Faites <strong>Ctrl+A</strong> puis <strong>Ctrl+C</strong> sur la page Steam et collez le JSON brut ci-dessous.",
+    statusPopupBlocked: "⚠️ Votre navigateur a bloqué l'ouverture automatique de l'onglet.<br>Cliquez sur <strong>Ouvrir la page Steam API</strong> ci-dessous pour l'ouvrir manuellement.",
     
     // Manual JSON fallback
     corsTitle: "Lien Steam ouvert dans un nouvel onglet",
     corsDesc: "Sur la page Steam : faites <strong>Ctrl+A</strong> puis <strong>Ctrl+C</strong> pour tout copier, puis collez le contenu ci-dessous :",
     placeholderManualJson: 'Collez tout le texte JSON brut ici (commençant par {"playerstats": ...})',
-    reopenSteamLink: "Rouvrir la page Steam API",
+    reopenSteamLink: "Ouvrir la page Steam API",
     btnProcessJson: "Valider et charger mes succès",
     btnLoadDemo: "Charger les données de démo",
     
@@ -117,13 +118,14 @@ const TRANSLATIONS = {
     btnFetchData: "Fetch Achievement JSON Data",
     statusEnterBoth: "Please enter both your Steam ID and your API Key.",
     statusAttempting: "Attempting automatic sync...",
-    statusFallbackCors: "Steam tab opened in your browser.<br>Press <strong>Ctrl+A</strong> then <strong>Ctrl+C</strong> and paste raw JSON in the box below.",
+    statusFallbackCors: "Steam tab opened in your browser!<br>Press <strong>Ctrl+A</strong> then <strong>Ctrl+C</strong> on the Steam page and paste raw JSON in the box below.",
+    statusPopupBlocked: "⚠️ Your browser blocked the automatic tab popup.<br>Click <strong>Open Steam API Page</strong> below to open it manually.",
     
     // Manual JSON fallback
     corsTitle: "Steam link opened in a new tab",
     corsDesc: "On the Steam page: press <strong>Ctrl+A</strong> then <strong>Ctrl+C</strong> to copy everything, then paste it below:",
     placeholderManualJson: 'Paste all raw JSON text here (starting with {"playerstats": ...})',
-    reopenSteamLink: "Reopen Steam API page",
+    reopenSteamLink: "Open Steam API page",
     btnProcessJson: "Validate & Load Achievements",
     btnLoadDemo: "Load demo data",
     

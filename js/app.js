@@ -533,39 +533,74 @@ async function syncSteamData() {
   const syncBtn = document.getElementById('syncSteamBtn');
   const spinner = document.getElementById('syncSpinner');
   const manualContainer = document.getElementById('manualPasteContainer');
+  const textarea = document.getElementById('manualJsonInput');
+  const openLinkBtn = document.getElementById('openSteamDirectLinkBtn');
 
   if (!apiKey || !steamId) {
-    statusEl.className = 'text-xs text-rose-400 block py-1 text-center';
-    statusEl.innerText = t('statusEnterBoth');
+    if (statusEl) {
+      statusEl.className = 'text-xs text-rose-400 block py-1 text-center';
+      statusEl.innerText = t('statusEnterBoth');
+      statusEl.classList.remove('hidden');
+    }
     return;
   }
 
   saveCredentials(steamId, apiKey);
 
-  syncBtn.disabled = true;
-  spinner.classList.remove('hidden');
-  statusEl.className = 'text-xs text-[#66c0f4] block py-1 text-center';
-  statusEl.innerText = t('statusAttempting');
-
   const directSteamUrl = buildSteamApiUrl(apiKey, steamId);
 
+  // Set URL on direct link button immediately
+  if (openLinkBtn) {
+    openLinkBtn.href = directSteamUrl;
+  }
+
+  // Open Steam tab synchronously during user click to bypass browser popup blockers
+  let steamWindow = null;
   try {
-    const rawAchievements = await fetchSteamAchievements(apiKey, steamId);
-    applyPlayerAchievementsData(rawAchievements);
-    showTrackerView();
-    showToast(t('toastSyncSuccess', achievements.length));
-  } catch (err) {
-    // On CORS block: open the direct Steam URL in a new tab and display raw paste box
-    window.open(directSteamUrl, '_blank');
+    steamWindow = window.open(directSteamUrl, '_blank');
+  } catch (e) {
+    console.warn('Popup blocked by browser:', e);
+  }
 
-    if (manualContainer) {
-      manualContainer.classList.remove('hidden');
-      const textarea = document.getElementById('manualJsonInput');
-      if (textarea) textarea.focus();
+  const wasBlocked = !steamWindow || steamWindow.closed || typeof steamWindow.closed === 'undefined';
+
+  // Reveal paste container immediately so user is ready
+  if (manualContainer) {
+    manualContainer.classList.remove('hidden');
+    if (textarea) {
+      setTimeout(() => textarea.focus(), 150);
     }
+  }
 
-    statusEl.className = 'text-xs text-amber-300 block py-1 text-center';
-    statusEl.innerHTML = t('statusFallbackCors');
+  if (statusEl) {
+    statusEl.classList.remove('hidden');
+    if (wasBlocked) {
+      statusEl.className = 'text-xs text-amber-300 block py-1 text-center';
+      statusEl.innerHTML = t('statusPopupBlocked');
+    } else {
+      statusEl.className = 'text-xs text-[#66c0f4] block py-1 text-center';
+      statusEl.innerHTML = t('statusFallbackCors');
+    }
+  }
+
+  if (syncBtn) syncBtn.disabled = true;
+  if (spinner) spinner.classList.remove('hidden');
+
+  try {
+    // Attempt fast background proxy fetch
+    const rawAchievements = await fetchSteamAchievements(apiKey, steamId);
+    if (rawAchievements && rawAchievements.length > 0) {
+      applyPlayerAchievementsData(rawAchievements);
+      if (steamWindow && !steamWindow.closed) {
+        try { steamWindow.close(); } catch (e) {}
+      }
+      showToast(t('toastSyncSuccess', achievements.length));
+    }
+  } catch (err) {
+    // Expected when CORS proxies are unavailable; Steam tab is already open for copy-pasting
+    if (statusEl && wasBlocked) {
+      statusEl.innerHTML = t('statusPopupBlocked');
+    }
   } finally {
     if (syncBtn) syncBtn.disabled = false;
     if (spinner) spinner.classList.add('hidden');

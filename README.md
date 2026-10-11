@@ -18,8 +18,10 @@ Modern, responsive web application for tracking and guiding unlock methods for a
 isaactracker/
 ├── css/
 │   └── style.css          # Custom Steam dark theme styles and layout
+├── data/
+│   ├── achievements.json  # Raw JSON dataset of all 641 achievements
+│   └── isaac_schema.js    # Data schema, demo dataset, and guide lookup
 ├── js/
-│   ├── isaac_schema.js    # Comprehensive schema of all 641 achievements, demo dataset, and guide lookup
 │   ├── i18n.js            # Internationalization engine (EN/FR translations, date formatting, DOM updates)
 │   ├── storage.js         # LocalStorage management and JSON import/export utilities
 │   ├── steam-api.js       # Steam Web API client with multi-proxy fallback handling
@@ -43,6 +45,7 @@ Open [index.html](index.html) in any modern web browser:
 ### ✅ Implemented Features
 - [x] Complete database of all 641 achievements with official Steam icons and descriptions
 - [x] Bilingual unlock guides (English & French) with instant language toggle (`FR` / `EN`)
+- [x] Dedicated `data/` folder separating raw datasets and schemas from JavaScript logic
 - [x] Steam Web API synchronization with resilient CORS proxy relays
 - [x] Fallback manual JSON import for private networks or CORS restrictions
 - [x] Live search across achievement names, descriptions, and unlock guides (EN & FR)
@@ -56,6 +59,5 @@ Open [index.html](index.html) in any modern web browser:
 
 ### ⏳ Upcoming Features / Backlog
 - [ ] **Compact Cards Layout**: Refine and compact achievement cards to reduce vertical footprint and screen space usage.
-- [ ] **Dedicated Data Folder**: Move JSON datasets and schemas out of the `js/` directory into a dedicated `data/` directory.
 - [ ] **Character & DLC Tagging**: Filter achievements by specific characters (e.g. The Lost, Lilith, Tainted) or game versions (Rebirth, Afterbirth, Repentance).
 - [ ] **Global Completion Stats**: Fetch and display global player unlock percentages from Steam Community data.
